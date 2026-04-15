@@ -5,9 +5,12 @@
  * Created on April 9, 2026, 4:00 PM
  */
 
-
 #include "xc.h"
+#include "ASMLib.h"
 #include "Button.h"
+#include "CirBuf.h"
+#include "I2CLib.h"
+#include "TOFLib.h"
 
 // CW1: FLASH CONFIGURATION WORD 1 (see PIC24 Family Reference Manual 24.1)
 #pragma config ICS = PGx1          // Comm Channel Select (Emulator EMUC1/EMUD1 pins are shared with PGC1/PGD1)
@@ -24,15 +27,9 @@
 #pragma config FNOSC = FRCPLL      // Oscillator Select (Fast RC Oscillator with PLL module (FRCPLL))
 
 void setup(void) {
-    //setup stuff
+    // setup stuff
 }
 
 int main(void) {
-    setup();
-    initButton();
-    while(1) {
-        if(isButtonPressed) {
-            //Scan -> Display
-        } 
-    }
+    // main stuff
 }
