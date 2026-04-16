@@ -4,6 +4,11 @@ Tool Name:
   c:\program files\microchip\xc16\v2.10\bin\bin\..\bin/elf-ld.exe
 
 Command:
+  -TC:\\Users\\ikepr\\AppData\\Local\\Temp\\tmp00006244.00 \
+  -TC:\\Users\\ikepr\\AppData\\Local\\Temp\\tmp00006244.01 \
+  -TC:\\Users\\ikepr\\AppData\\Local\\Temp\\tmp00006244.02 \
+  -TC:\\Users\\ikepr\\AppData\\Local\\Temp\\tmp00006244.03 \
+  -TC:\\Users\\ikepr\\AppData\\Local\\Temp\\tmp00006244.04 \
   -p24FJ64GA002 \
   --mdfp=C:/Program Files/Microchip/MPLABX/v6.25/packs/Microchip/PIC24F-GA-GB_DFP/1.10.375/xc16 \
   -o \
@@ -23,8 +28,7 @@ Command:
   --defsym=__MPLAB_BUILD=1 \
   --defsym=__MPLAB_DEBUG=1 \
   --defsym=__DEBUG=1 \
-  --defsym=__MPLAB_DEBUGGER_SIMULATOR=1 \
-  -Tp24FJ64GA002.gld.00 \
+  -Tp24FJ64GA002.gld.05 \
   --stack=16 \
   --check-sections \
   --data-init \
@@ -68,18 +72,25 @@ Default Scalar Model: Small
 
 section                    address   length (PC units)   length (bytes) (dec)
 -------                    -------   -----------------   --------------------
-.text                        0x200                0xce           0x135  (309)
-.text                        0x2ce                0x6a            0x9f  (159)
+.text                        0x200               0x108           0x18c  (396)
+.text                        0x308                0x8e            0xd5  (213)
+.dinit                       0x396                 0x8             0xc  (12)
 
-                 Total "program" memory used (bytes):          0x1d4  (468) <1%
+                 Total "program" memory used (bytes):          0x26d  (621) <1%
 
 
 "data" Memory  [Origin = 0x800, Length = 0x2000]
 
 section                    address      alignment gaps    total length  (dec)
 -------                    -------      --------------    -------------------
+reserve_data_0x800           0x800                0x20            0x20  (32)
+reserve_data_0x820           0x820                 0x2             0x2  (2)
+reserve_data_0x822           0x822                 0x2             0x2  (2)
+reserve_data_0x824           0x824                 0x2             0x2  (2)
+reserve_data_0x826           0x826                0x2a            0x2a  (42)
+.nbss                        0x850                   0             0x2  (2)
 
-                 Total "data" memory used (bytes):              0  (0) 
+                 Total "data" memory used (bytes):           0x52  (82) 1%
 
 
 Dynamic Memory Usage
@@ -87,12 +98,20 @@ Dynamic Memory Usage
 region                     address                      maximum length  (dec)
 ------                     -------                      ---------------------
 heap                             0                                   0  (0)
-stack                        0x800                              0x2000  (8192)
+stack                        0x852                              0x1fae  (8110)
 
-                 Maximum dynamic memory (bytes):         0x2000  (8192)
+                 Maximum dynamic memory (bytes):         0x1fae  (8110)
 
 Info: Project is using a large data memory model when small data memory model is sufficient.
 
+
+External Symbols in Data Memory (by address):
+
+                    0x0850                  _isButtonPressed
+
+External Symbols in Data Memory (by name):
+
+                    0x0850                  _isButtonPressed
 
 External Symbols in Program Memory (by address):
 
@@ -100,19 +119,25 @@ External Symbols in Program Memory (by address):
                   0x00023c                  __psv_init
                   0x000252                  __data_init
                   0x000252                  __data_init_standard
-                  0x0002c8                  __DefaultInterrupt
-                  0x0002ce                  _initButton
-                  0x000330                  _main
+                  0x0002c8                  __T2Interrupt
+                  0x0002dc                  __IC1Interrupt
+                  0x000302                  __DefaultInterrupt
+                  0x000308                  _initButton
+                  0x000372                  _setup
+                  0x000378                  _main
 
 External Symbols in Program Memory (by name):
 
-                  0x0002c8                  __DefaultInterrupt
+                  0x000302                  __DefaultInterrupt
+                  0x0002dc                  __IC1Interrupt
+                  0x0002c8                  __T2Interrupt
                   0x000252                  __data_init
                   0x000252                  __data_init_standard
                   0x00023c                  __psv_init
                   0x000200                  __resetPRI
-                  0x0002ce                  _initButton
-                  0x000330                  _main
+                  0x000308                  _initButton
+                  0x000378                  _main
+                  0x000372                  _setup
 
 Memory Configuration
 
@@ -129,12 +154,36 @@ CONFIG1          0x00abfe           0x000002
 
 Linker script and memory map
 
+
+reserve_data_0x800
+                    0x0800         0x20
+                    0x0820                  . = 0x20
+ *fill*             0x0800         0x2000
+
+reserve_data_0x820
+                    0x0820          0x2
+                    0x0822                  . = 0x2
+ *fill*             0x0820          0x200
+
+reserve_data_0x822
+                    0x0822          0x2
+                    0x0824                  . = 0x2
+ *fill*             0x0822          0x200
+
+reserve_data_0x824
+                    0x0824          0x2
+                    0x0826                  . = 0x2
+ *fill*             0x0824          0x200
+
+reserve_data_0x826
+                    0x0826         0x2a
+                    0x0850                  . = 0x2a
+ *fill*             0x0826         0x2a00
 LOAD build/default/debug/Button.o
 LOAD build/default/debug/Main.o
                     0x0001                  __MPLAB_BUILD = 0x1
                     0x0001                  __MPLAB_DEBUG = 0x1
                     0x0001                  __DEBUG = 0x1
-                    0x0001                  __MPLAB_DEBUGGER_SIMULATOR = 0x1
 LOAD pPIC24Fxxx
 LOAD c:/program files/microchip/xc16/v2.10/bin/bin/../../lib\libfx-elf.a
                     0xabfc                  __CONFIG2 = 0xabfc
@@ -153,7 +202,7 @@ LOAD c:/program files/microchip/xc16/v2.10/bin/bin/../../lib\libfx-elf.a
                   0x000002          0x2 SHORT 0x0 ((ABSOLUTE (__reset) >> 0x10) & 0x7f)
                   0x000003          0x2 SHORT 0x0
 
-.text             0x000200         0xce
+.text             0x000200        0x108
  *(.init)
  .init            0x000200         0x4c c:/program files/microchip/xc16/v2.10/bin/bin/../../lib\libc99-pic30-elf.a(crt0_standard.o)
                   0x000200                  __resetPRI
@@ -165,16 +214,19 @@ LOAD c:/program files/microchip/xc16/v2.10/bin/bin/../../lib\libfx-elf.a
  *(.user_init)
  *(.handle)
  *(.isr*)
- .isr             0x0002c8          0x4 default_isr
-                  0x0002c8                  __DefaultInterrupt
+ .isr.text        0x0002c8         0x3a build/default/debug/Button.o
+                  0x0002c8                  __T2Interrupt
+                  0x0002dc                  __IC1Interrupt
+ .isr             0x000302          0x4 default_isr
+                  0x000302                  __DefaultInterrupt
  *(.libc)
  *(.libm)
  *(.libdsp)
  *(.lib*)
  .libpic30_crt_start_mode
-                  0x0002cc          0x2 c:/program files/microchip/xc16/v2.10/bin/bin/../../lib\libc99-pic30-elf.a(crt_start_mode_normal.Meo)
-                  0x0002cc                  __crt_start_mode
-                  0x0002cc                  __crt_start_mode_normal
+                  0x000306          0x2 c:/program files/microchip/xc16/v2.10/bin/bin/../../lib\libc99-pic30-elf.a(crt_start_mode_normal.Meo)
+                  0x000306                  __crt_start_mode
+                  0x000306                  __crt_start_mode_normal
 
 usercode
  *(usercode)
@@ -188,30 +240,31 @@ __CONFIG1
 .comment
  *(.comment)
 
-.debug_info       0x000000        0xbf7
+.debug_info       0x000000        0xe1a
  *(.debug_info)
- .debug_info      0x000000        0xabe build/default/debug/Button.o
- .debug_info      0x000abe        0x139 build/default/debug/Main.o
+ .debug_info      0x000000        0xcad build/default/debug/Button.o
+ .debug_info      0x000cad        0x16d build/default/debug/Main.o
  *(.gnu.linkonce.wi.*)
 
-.debug_abbrev     0x000000        0x130
+.debug_abbrev     0x000000        0x16e
  *(.debug_abbrev)
- .debug_abbrev    0x000000         0xfa build/default/debug/Button.o
- .debug_abbrev    0x0000fa         0x36 build/default/debug/Main.o
+ .debug_abbrev    0x000000        0x10b build/default/debug/Button.o
+ .debug_abbrev    0x00010b         0x63 build/default/debug/Main.o
 
-.debug_line       0x000000        0x14e
+.debug_line       0x000000        0x186
  *(.debug_line)
- .debug_line      0x000000        0x119 build/default/debug/Button.o
- .debug_line      0x000119         0x35 build/default/debug/Main.o
+ .debug_line      0x000000        0x13c build/default/debug/Button.o
+ .debug_line      0x00013c         0x4a build/default/debug/Main.o
 
-.debug_frame      0x000000         0x5c
+.debug_frame      0x000000         0xc4
  *(.debug_frame)
- .debug_frame     0x000000         0x2e build/default/debug/Button.o
- .debug_frame     0x00002e         0x2e build/default/debug/Main.o
+ .debug_frame     0x000000         0x7c build/default/debug/Button.o
+ .debug_frame     0x00007c         0x48 build/default/debug/Main.o
 
-.debug_str        0x000000         0x46
+.debug_str        0x000000         0x70
  *(.debug_str)
- .debug_str       0x000000         0x46 build/default/debug/Button.o
+ .debug_str       0x000000         0x60 build/default/debug/Button.o
+ .debug_str       0x000060         0x10 build/default/debug/Main.o
 
 .debug_loc
  *(.debug_loc)
@@ -220,12 +273,12 @@ __CONFIG1
  *(.debug_macinfo)
 
 .debug_pubnames
-                  0x000000         0x3c
+                  0x000000         0x7d
  *(.debug_pubnames)
  .debug_pubnames
-                  0x000000         0x21 build/default/debug/Button.o
+                  0x000000         0x58 build/default/debug/Button.o
  .debug_pubnames
-                  0x000021         0x1b build/default/debug/Main.o
+                  0x000058         0x25 build/default/debug/Main.o
 
 .debug_ranges
  *(.debug_ranges)
@@ -822,24 +875,39 @@ LOAD c:/program files/microchip/xc16/v2.10/bin/bin/../../lib\libc99-elf.a
 END GROUP
 OUTPUT(dist/default/debug/ObjectScanner.X.debug.elf elf32-pic30)
 LOAD default_isr
+LOAD data_init
 
 .debug_pubtypes
-                  0x000030        0x10a
+                  0x000030        0x129
  .debug_pubtypes
-                  0x000030         0xf8 build/default/debug/Button.o
+                  0x000030        0x117 build/default/debug/Button.o
  .debug_pubtypes
-                  0x000128         0x12 build/default/debug/Main.o
+                  0x000147         0x12 build/default/debug/Main.o
 
 __c30_signature
-                  0x00013a         0x18
+                  0x000159         0x18
  __c30_signature
-                  0x00013a          0x6 build/default/debug/Button.o
+                  0x000159          0x6 build/default/debug/Button.o
  __c30_signature
-                  0x000140          0x6 build/default/debug/Main.o
+                  0x00015f          0x6 build/default/debug/Main.o
  __c30_signature
-                  0x000146          0x6 c:/program files/microchip/xc16/v2.10/bin/bin/../../lib\libc99-pic30-elf.a(crt0_standard.o)
+                  0x000165          0x6 c:/program files/microchip/xc16/v2.10/bin/bin/../../lib\libc99-pic30-elf.a(crt0_standard.o)
  __c30_signature
-                  0x00014c          0x6 c:/program files/microchip/xc16/v2.10/bin/bin/../../lib\libc99-pic30-elf.a(data_init_standard.o)
+                  0x00016b          0x6 c:/program files/microchip/xc16/v2.10/bin/bin/../../lib\libc99-pic30-elf.a(data_init_standard.o)
+
+.nbss               0x0850          0x2
+ .nbss              0x0850          0x2 build/default/debug/Button.o
+                    0x0850                  _isButtonPressed
+
+.ivt._T2Interrupt
+                  0x000022          0x2
+ .ivt._T2Interrupt
+                  0x000022          0x2 build/default/debug/Button.o
+
+.ivt._IC1Interrupt
+                  0x000016          0x2
+ .ivt._IC1Interrupt
+                  0x000016          0x2 build/default/debug/Button.o
 
 .config_JTAGEN    0x00abfe          0x2
  .config_JTAGEN
@@ -848,8 +916,12 @@ __c30_signature
 .config_IESO      0x00abfc          0x2
  .config_IESO     0x00abfc          0x2 build/default/debug/Main.o
 
-.text             0x0002ce         0x6a
- .text            0x0002ce         0x62 build/default/debug/Button.o
-                  0x0002ce                  _initButton
- .text            0x000330          0x8 build/default/debug/Main.o
-                  0x000330                  _main
+.text             0x000308         0x8e
+ .text            0x000308         0x6a build/default/debug/Button.o
+                  0x000308                  _initButton
+ .text            0x000372         0x24 build/default/debug/Main.o
+                  0x000372                  _setup
+                  0x000378                  _main
+
+.dinit            0x000396          0x8
+ .dinit           0x000396          0x8 data_init

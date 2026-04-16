@@ -11,14 +11,14 @@
 
 volatile int isButtonPressed = 0;
 
-void __attribute__((interrupt, auto_psv)) _T2Interrupt(void) { // Handles the 1-second rollover to maintain a long-running timestamp
+void __attribute__((interrupt, auto_psv)) _T2Interrupt(void) { 
     _T2IF = 0;
 }
 
 void __attribute__((__interrupt__, __auto_psv__)) _IC1Interrupt(void) { // Handles hardware-timed button events and software debouncing
     _IC1IF = 0;
     (void)IC1BUF; // Clear buffer
-    isButtonPressed = (PORTBbits.RB8 == 0); // 1 if pressed, 0 if released
+    isButtonPressed = !PORTBbits.RB8; // 1 if pressed, 0 if released
 }
 
 void initButton(void) {
@@ -38,6 +38,7 @@ void initButton(void) {
 
     IC1CON = 0;              // Reset IC1
     IC1CONbits.ICTMR = 1;    // Set IC1 to use T2
+    IC1CONbits.ICI = 0; // Interrupt every capture
     IC1CONbits.ICM = 0b001;  // Capture every edge (rising and falling)
     
     _IC1IF = 0;

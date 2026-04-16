@@ -33,6 +33,9 @@ int main(void) {
     while(1) {
         if(isButtonPressed) {
             //Scan -> Display
+            if (!isButtonPressed) {
+                isButtonPressed = 0;
+            }
         } 
     }
 }

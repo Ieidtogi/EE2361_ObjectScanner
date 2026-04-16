@@ -12,6 +12,7 @@
 extern "C" {
 #endif
     void initButton(void);
+    extern volatile int isButtonPressed;
 #ifdef	__cplusplus
 }
 #endif
