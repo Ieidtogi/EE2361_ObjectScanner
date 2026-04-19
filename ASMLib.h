@@ -1,5 +1,5 @@
 /* 
- * File:   asmLib.h
+ * File:   ASMLib.h
  * Author: Kaibin
  *
  * Created on March 2, 2026, 7:54 PM
@@ -11,10 +11,10 @@
 #ifdef	__cplusplus
 extern "C" {
 #endif
-    
-    void delay1u(void);
-    void delay1m(void);
-    
+
+	void delay1u(void);
+	void delay1m(void);
+
 #ifdef	__cplusplus
 }
 #endif
