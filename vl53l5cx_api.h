@@ -23,14 +23,14 @@
  * @brief Current driver version.
  */
 
-#define VL53L5CX_API_REVISION			"VL53L5CX_1.3.9"
+#define VL53L5CX_API_REVISION				"VL53L5CX_1.3.9"
 
 /**
  * @brief Default I2C address of VL53L5CX sensor. Can be changed using function
  * vl53l5cx_set_i2c_address() function is called.
  */
 
-#define VL53L5CX_DEFAULT_I2C_ADDRESS	        ((uint16_t)0x52)
+#define VL53L5CX_DEFAULT_I2C_ADDRESS		((uint16_t)0x52)
 
 /**
  * @brief Macro VL53L5CX_RESOLUTION_4X4 or VL53L5CX_RESOLUTION_8X8 allows
@@ -38,8 +38,8 @@
  * vl53l5cx_set_resolution().
  */
 
-#define VL53L5CX_RESOLUTION_4X4			((uint8_t) 16U)
-#define VL53L5CX_RESOLUTION_8X8			((uint8_t) 64U)
+#define VL53L5CX_RESOLUTION_4X4				((uint8_t) 16U)
+#define VL53L5CX_RESOLUTION_8X8				((uint8_t) 64U)
 
 
 /**
@@ -67,8 +67,8 @@
  * Both modes can be changed using function vl53l5cx_set_power_mode().
  */
 
-#define VL53L5CX_POWER_MODE_SLEEP		((uint8_t) 0U)
-#define VL53L5CX_POWER_MODE_WAKEUP		((uint8_t) 1U)
+#define VL53L5CX_POWER_MODE_SLEEP			((uint8_t) 0U)
+#define VL53L5CX_POWER_MODE_WAKEUP			((uint8_t) 1U)
 
 /**
  * @brief Macro VL53L5CX_STATUS_OK indicates that VL53L5 sensor has no error.
@@ -76,13 +76,13 @@
  * I2C access, ...). Macro VL53L5CX_MCU_ERROR is used to indicate a MCU issue.
  */
 
-#define VL53L5CX_STATUS_OK			((uint8_t) 0U)
+#define VL53L5CX_STATUS_OK					((uint8_t) 0U)
 #define VL53L5CX_STATUS_TIMEOUT_ERROR		((uint8_t) 1U)
 #define VL53L5CX_STATUS_CORRUPTED_FRAME		((uint8_t) 2U)
 #define VL53L5CX_STATUS_CRC_CSUM_FAILED		((uint8_t) 3U)
-#define VL53L5CX_MCU_ERROR			((uint8_t) 66U)
+#define VL53L5CX_MCU_ERROR					((uint8_t) 66U)
 #define VL53L5CX_STATUS_INVALID_PARAM		((uint8_t) 127U)
-#define VL53L5CX_STATUS_ERROR			((uint8_t) 255U)
+#define VL53L5CX_STATUS_ERROR				((uint8_t) 255U)
 
 /**
  * @brief Definitions for Range results block headers
@@ -90,54 +90,54 @@
 
 #if VL53L5CX_NB_TARGET_PER_ZONE == 1
 
-#define VL53L5CX_START_BH				((uint32_t)0x0000000DU)
-#define VL53L5CX_METADATA_BH			((uint32_t)0x54B400C0U)
-#define VL53L5CX_COMMONDATA_BH			((uint32_t)0x54C00040U)
-#define VL53L5CX_AMBIENT_RATE_BH		((uint32_t)0x54D00104U)
-#define VL53L5CX_SPAD_COUNT_BH			((uint32_t)0x55D00404U)
-#define VL53L5CX_NB_TARGET_DETECTED_BH	((uint32_t)0xDB840401U)
-#define VL53L5CX_SIGNAL_RATE_BH			((uint32_t)0xDBC40404U)
-#define VL53L5CX_RANGE_SIGMA_MM_BH		((uint32_t)0xDEC40402U)
-#define VL53L5CX_DISTANCE_BH			((uint32_t)0xDF440402U)
-#define VL53L5CX_REFLECTANCE_BH			((uint32_t)0xE0440401U)
-#define VL53L5CX_TARGET_STATUS_BH		((uint32_t)0xE0840401U)
-#define VL53L5CX_MOTION_DETECT_BH		((uint32_t)0xD85808C0U)
+#define VL53L5CX_START_BH					((uint32_t)0x0000000DU)
+#define VL53L5CX_METADATA_BH				((uint32_t)0x54B400C0U)
+#define VL53L5CX_COMMONDATA_BH				((uint32_t)0x54C00040U)
+#define VL53L5CX_AMBIENT_RATE_BH			((uint32_t)0x54D00104U)
+#define VL53L5CX_SPAD_COUNT_BH				((uint32_t)0x55D00404U)
+#define VL53L5CX_NB_TARGET_DETECTED_BH		((uint32_t)0xDB840401U)
+#define VL53L5CX_SIGNAL_RATE_BH				((uint32_t)0xDBC40404U)
+#define VL53L5CX_RANGE_SIGMA_MM_BH			((uint32_t)0xDEC40402U)
+#define VL53L5CX_DISTANCE_BH				((uint32_t)0xDF440402U)
+#define VL53L5CX_REFLECTANCE_BH				((uint32_t)0xE0440401U)
+#define VL53L5CX_TARGET_STATUS_BH			((uint32_t)0xE0840401U)
+#define VL53L5CX_MOTION_DETECT_BH			((uint32_t)0xD85808C0U)
 
-#define VL53L5CX_METADATA_IDX			((uint16_t)0x54B4U)
-#define VL53L5CX_SPAD_COUNT_IDX			((uint16_t)0x55D0U)
-#define VL53L5CX_AMBIENT_RATE_IDX		((uint16_t)0x54D0U)
-#define VL53L5CX_NB_TARGET_DETECTED_IDX	((uint16_t)0xDB84U)
-#define VL53L5CX_SIGNAL_RATE_IDX		((uint16_t)0xDBC4U)
-#define VL53L5CX_RANGE_SIGMA_MM_IDX		((uint16_t)0xDEC4U)
-#define VL53L5CX_DISTANCE_IDX			((uint16_t)0xDF44U)
-#define VL53L5CX_REFLECTANCE_EST_PC_IDX	((uint16_t)0xE044U)
-#define VL53L5CX_TARGET_STATUS_IDX		((uint16_t)0xE084U)
-#define VL53L5CX_MOTION_DETEC_IDX		((uint16_t)0xD858U)
+#define VL53L5CX_METADATA_IDX				((uint16_t)0x54B4U)
+#define VL53L5CX_SPAD_COUNT_IDX				((uint16_t)0x55D0U)
+#define VL53L5CX_AMBIENT_RATE_IDX			((uint16_t)0x54D0U)
+#define VL53L5CX_NB_TARGET_DETECTED_IDX		((uint16_t)0xDB84U)
+#define VL53L5CX_SIGNAL_RATE_IDX			((uint16_t)0xDBC4U)
+#define VL53L5CX_RANGE_SIGMA_MM_IDX			((uint16_t)0xDEC4U)
+#define VL53L5CX_DISTANCE_IDX				((uint16_t)0xDF44U)
+#define VL53L5CX_REFLECTANCE_EST_PC_IDX		((uint16_t)0xE044U)
+#define VL53L5CX_TARGET_STATUS_IDX			((uint16_t)0xE084U)
+#define VL53L5CX_MOTION_DETEC_IDX			((uint16_t)0xD858U)
 
 #else
-#define VL53L5CX_START_BH				((uint32_t)0x0000000DU)
-#define VL53L5CX_METADATA_BH			((uint32_t)0x54B400C0U)
-#define VL53L5CX_COMMONDATA_BH			((uint32_t)0x54C00040U)
-#define VL53L5CX_AMBIENT_RATE_BH		((uint32_t)0x54D00104U)
-#define VL53L5CX_NB_TARGET_DETECTED_BH	((uint32_t)0x57D00401U)
-#define VL53L5CX_SPAD_COUNT_BH			((uint32_t)0x55D00404U)
-#define VL53L5CX_SIGNAL_RATE_BH			((uint32_t)0x58900404U)
-#define VL53L5CX_RANGE_SIGMA_MM_BH		((uint32_t)0x64900402U)
-#define VL53L5CX_DISTANCE_BH			((uint32_t)0x66900402U)
-#define VL53L5CX_REFLECTANCE_BH			((uint32_t)0x6A900401U)
-#define VL53L5CX_TARGET_STATUS_BH		((uint32_t)0x6B900401U)
-#define VL53L5CX_MOTION_DETECT_BH		((uint32_t)0xCC5008C0U)
+#define VL53L5CX_START_BH					((uint32_t)0x0000000DU)
+#define VL53L5CX_METADATA_BH				((uint32_t)0x54B400C0U)
+#define VL53L5CX_COMMONDATA_BH				((uint32_t)0x54C00040U)
+#define VL53L5CX_AMBIENT_RATE_BH			((uint32_t)0x54D00104U)
+#define VL53L5CX_NB_TARGET_DETECTED_BH		((uint32_t)0x57D00401U)
+#define VL53L5CX_SPAD_COUNT_BH				((uint32_t)0x55D00404U)
+#define VL53L5CX_SIGNAL_RATE_BH				((uint32_t)0x58900404U)
+#define VL53L5CX_RANGE_SIGMA_MM_BH			((uint32_t)0x64900402U)
+#define VL53L5CX_DISTANCE_BH				((uint32_t)0x66900402U)
+#define VL53L5CX_REFLECTANCE_BH				((uint32_t)0x6A900401U)
+#define VL53L5CX_TARGET_STATUS_BH			((uint32_t)0x6B900401U)
+#define VL53L5CX_MOTION_DETECT_BH			((uint32_t)0xCC5008C0U)
 
-#define VL53L5CX_METADATA_IDX			((uint16_t)0x54B4U)
-#define VL53L5CX_SPAD_COUNT_IDX			((uint16_t)0x55D0U)
-#define VL53L5CX_AMBIENT_RATE_IDX		((uint16_t)0x54D0U)
-#define VL53L5CX_NB_TARGET_DETECTED_IDX	((uint16_t)0x57D0U)
-#define VL53L5CX_SIGNAL_RATE_IDX		((uint16_t)0x5890U)
-#define VL53L5CX_RANGE_SIGMA_MM_IDX		((uint16_t)0x6490U)
-#define VL53L5CX_DISTANCE_IDX			((uint16_t)0x6690U)
-#define VL53L5CX_REFLECTANCE_EST_PC_IDX	((uint16_t)0x6A90U)
-#define VL53L5CX_TARGET_STATUS_IDX		((uint16_t)0x6B90U)
-#define VL53L5CX_MOTION_DETEC_IDX		((uint16_t)0xCC50U)
+#define VL53L5CX_METADATA_IDX				((uint16_t)0x54B4U)
+#define VL53L5CX_SPAD_COUNT_IDX				((uint16_t)0x55D0U)
+#define VL53L5CX_AMBIENT_RATE_IDX			((uint16_t)0x54D0U)
+#define VL53L5CX_NB_TARGET_DETECTED_IDX		((uint16_t)0x57D0U)
+#define VL53L5CX_SIGNAL_RATE_IDX			((uint16_t)0x5890U)
+#define VL53L5CX_RANGE_SIGMA_MM_IDX			((uint16_t)0x6490U)
+#define VL53L5CX_DISTANCE_IDX				((uint16_t)0x6690U)
+#define VL53L5CX_REFLECTANCE_EST_PC_IDX		((uint16_t)0x6A90U)
+#define VL53L5CX_TARGET_STATUS_IDX			((uint16_t)0x6B90U)
+#define VL53L5CX_MOTION_DETEC_IDX			((uint16_t)0xCC50U)
 #endif
 
 
@@ -145,33 +145,33 @@
  * @brief Inner Macro for API. Not for user, only for development.
  */
 
-#define VL53L5CX_NVM_DATA_SIZE			((uint16_t)492U)
-#define VL53L5CX_CONFIGURATION_SIZE		((uint16_t)972U)
-#define VL53L5CX_OFFSET_BUFFER_SIZE		((uint16_t)488U)
-#define VL53L5CX_XTALK_BUFFER_SIZE		((uint16_t)776U)
+#define VL53L5CX_NVM_DATA_SIZE				((uint16_t)492U)
+#define VL53L5CX_CONFIGURATION_SIZE			((uint16_t)972U)
+#define VL53L5CX_OFFSET_BUFFER_SIZE			((uint16_t)488U)
+#define VL53L5CX_XTALK_BUFFER_SIZE			((uint16_t)776U)
 
-#define VL53L5CX_DCI_ZONE_CONFIG		((uint16_t)0x5450U)
-#define VL53L5CX_DCI_FREQ_HZ			((uint16_t)0x5458U)
-#define VL53L5CX_DCI_INT_TIME			((uint16_t)0x545CU)
-#define VL53L5CX_DCI_FW_NB_TARGET		((uint16_t)0x5478)
-#define VL53L5CX_DCI_RANGING_MODE		((uint16_t)0xAD30U)
-#define VL53L5CX_DCI_DSS_CONFIG			((uint16_t)0xAD38U)
-#define VL53L5CX_DCI_TARGET_ORDER		((uint16_t)0xAE64U)
-#define VL53L5CX_DCI_SHARPENER			((uint16_t)0xAED8U)
-#define VL53L5CX_DCI_INTERNAL_CP		((uint16_t)0xB39CU)
-#define VL53L5CX_DCI_SYNC_PIN			((uint16_t)0xB5F0U)
-#define VL53L5CX_DCI_MOTION_DETECTOR_CFG ((uint16_t)0xBFACU)
-#define VL53L5CX_DCI_SINGLE_RANGE		((uint16_t)0xD964U)
-#define VL53L5CX_DCI_OUTPUT_CONFIG		((uint16_t)0xD968U)
-#define VL53L5CX_DCI_OUTPUT_ENABLES		((uint16_t)0xD970U)
-#define VL53L5CX_DCI_OUTPUT_LIST		((uint16_t)0xD980U)
-#define VL53L5CX_DCI_PIPE_CONTROL		((uint16_t)0xDB80U)
-#define VL53L5CX_GLARE_FILTER			((uint16_t)0xE108U)
+#define VL53L5CX_DCI_ZONE_CONFIG			((uint16_t)0x5450U)
+#define VL53L5CX_DCI_FREQ_HZ				((uint16_t)0x5458U)
+#define VL53L5CX_DCI_INT_TIME				((uint16_t)0x545CU)
+#define VL53L5CX_DCI_FW_NB_TARGET			((uint16_t)0x5478)
+#define VL53L5CX_DCI_RANGING_MODE			((uint16_t)0xAD30U)
+#define VL53L5CX_DCI_DSS_CONFIG				((uint16_t)0xAD38U)
+#define VL53L5CX_DCI_TARGET_ORDER			((uint16_t)0xAE64U)
+#define VL53L5CX_DCI_SHARPENER				((uint16_t)0xAED8U)
+#define VL53L5CX_DCI_INTERNAL_CP			((uint16_t)0xB39CU)
+#define VL53L5CX_DCI_SYNC_PIN				((uint16_t)0xB5F0U)
+#define VL53L5CX_DCI_MOTION_DETECTOR_CFG	((uint16_t)0xBFACU)
+#define VL53L5CX_DCI_SINGLE_RANGE			((uint16_t)0xD964U)
+#define VL53L5CX_DCI_OUTPUT_CONFIG			((uint16_t)0xD968U)
+#define VL53L5CX_DCI_OUTPUT_ENABLES			((uint16_t)0xD970U)
+#define VL53L5CX_DCI_OUTPUT_LIST			((uint16_t)0xD980U)
+#define VL53L5CX_DCI_PIPE_CONTROL			((uint16_t)0xDB80U)
+#define VL53L5CX_GLARE_FILTER				((uint16_t)0xE108U)
 
 
-#define VL53L5CX_UI_CMD_STATUS			((uint16_t)0x2C00U)
-#define VL53L5CX_UI_CMD_START			((uint16_t)0x2C04U)
-#define VL53L5CX_UI_CMD_END				((uint16_t)0x2FFFU)
+#define VL53L5CX_UI_CMD_STATUS				((uint16_t)0x2C00U)
+#define VL53L5CX_UI_CMD_START				((uint16_t)0x2C04U)
+#define VL53L5CX_UI_CMD_END					((uint16_t)0x2FFFU)
 
 /**
  * @brief Inner values for API. Max buffer size depends of the selected output.
@@ -647,7 +647,7 @@ uint8_t vl53l5cx_enable_internal_cp(
  * @param (VL53L5CX_Configuration) *p_dev : VL53L5CX configuration structure.
  */
 uint8_t vl53l5cx_disable_internal_cp(
- 	      VL53L5CX_Configuration          *p_dev);
+ 		  VL53L5CX_Configuration          *p_dev);
 
 /**
  * @brief This function can be used to read 'extra data' from DCI. Using a known

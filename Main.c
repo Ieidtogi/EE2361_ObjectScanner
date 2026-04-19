@@ -44,15 +44,15 @@ void setup(void) {
 
 	LATA = 0xFFFF;
 	LATB = 0xFFFF;
-
-	// Initializations
-	i2c1_init(&myRxBuf);
-	tof_init();
-
+	
 	myRxBuf = buffer_init();
 	myEEPROM_1 = eeprom_init(0xA0, 65536, 128);
 	myEEPROM_1 = eeprom_init(0xA1, 65536, 128);
-	
+
+	// Initializations
+	i2c1_init(&myRxBuf);
+	tof_init(myEEPROM_1, myEEPROM_2);
+
 	// ISR Priority Configuration
 	_MI2C1IP = 6;
 }

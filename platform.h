@@ -128,7 +128,7 @@ typedef struct
 
 uint8_t RdByte(
 		VL53L5CX_Platform *p_platform,
-		uint16_t RegisterAdress,
+		uint16_t RegisterAddr,
 		uint8_t *p_value);
 
 /**
@@ -142,7 +142,7 @@ uint8_t RdByte(
 
 uint8_t WrByte(
 		VL53L5CX_Platform *p_platform,
-		uint16_t RegisterAdress,
+		uint16_t RegisterAddr,
 		uint8_t value);
 
 /**
@@ -151,15 +151,15 @@ uint8_t WrByte(
  * structure.
  * @param (uint16_t) Address : I2C location of values to read.
  * @param (uint8_t) *p_values : Buffer of bytes to read.
- * @param (uint32_t) size : Size of *p_values buffer.
+ * @param (uint16_t) size : Size of *p_values buffer.
  * @return (uint8_t) status : 0 if OK
  */
 
 uint8_t RdMulti(
 		VL53L5CX_Platform *p_platform,
-		uint16_t RegisterAdress,
+		uint16_t RegisterAddr,
 		uint8_t *p_values,
-		uint32_t size);
+		uint16_t size);
 
 /**
  * @brief Mandatory function used to write multiples bytes.
@@ -167,15 +167,26 @@ uint8_t RdMulti(
  * structure.
  * @param (uint16_t) Address : I2C location of values to write.
  * @param (uint8_t) *p_values : Buffer of bytes to write.
- * @param (uint32_t) size : Size of *p_values buffer.
+ * @param (uint16_t) size : Size of *p_values buffer.
  * @return (uint8_t) status : 0 if OK
  */
 
 uint8_t WrMulti(
 		VL53L5CX_Platform *p_platform,
-		uint16_t RegisterAdress,
+		uint16_t RegisterAddr,
 		uint8_t *p_values,
-		uint32_t size);
+		uint16_t size);
+
+// uint8_t WrFW(
+// 		VL53L5CX_Platform *p_platform,
+// 		uint32_t addr,
+// 		uint16_t size);
+
+uint8_t WrEEPROM(
+		VL53L5CX_Platform *p_platform,
+		uint16_t RegisterAddr,
+		uint32_t EEPROMAddr,
+		uint16_t size);
 
 /**
  * @brief Optional function, only used to perform an hardware reset of the
@@ -193,7 +204,7 @@ uint8_t Reset_Sensor(
 /**
  * @brief Mandatory function, used to swap a buffer. The buffer size is always a
  * multiple of 4 (4, 8, 12, 16, ...).
- * @param (uint8_t*) buffer : Buffer to swap, generally uint32_t
+ * @param (uint8_t*) buffer : Buffer to swap, generally uint16_t
  * @param (uint16_t) size : Buffer size to swap
  */
 
@@ -205,12 +216,12 @@ void SwapBuffer(
  * filled as it's used into the API.
  * @param (VL53L5CX_Platform*) p_platform : Pointer of VL53L5CX platform
  * structure.
- * @param (uint32_t) TimeMs : Time to wait in ms.
+ * @param (uint16_t) TimeMs : Time to wait in ms.
  * @return (uint8_t) status : 0 if wait is finished.
  */
 
 uint8_t WaitMs(
 		VL53L5CX_Platform *p_platform,
-		uint32_t TimeMs);
+		uint16_t TimeMs);
 
 #endif	// _PLATFORM_H_

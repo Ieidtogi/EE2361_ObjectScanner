@@ -9,11 +9,21 @@
 #include "I2CLib.h"
 
 volatile I2C_STATE_t i2c_state = I2C_IDLE;
-static buffer_t *rx_buffer; 		// Pointer to the circular buffer
+static const buffer_t *rx_buffer; 		// Pointer to the circular buffer
 
-volatile unsigned char i2c_addr;
-volatile unsigned char *tx_ptr;
+volatile uint8_t i2c_addr;
+volatile uint16_t reg_addr;
+
+volatile uint8_t *tx_ptr;
+volatile uint8_t *rx_ptr;
+
 volatile uint16_t tx_count;
+volatile uint16_t rx_count;
+
+static uint16_t reg_to_read;
+static uint8_t i2c_addr;
+static uint8_t is_read;
+
 volatile uint8_t i2c_busy = 0;
 
 void i2c1_init(buffer_t *rxBuf) {
@@ -31,18 +41,18 @@ void i2c1_init(buffer_t *rxBuf) {
 	// I2C Start
 	i2c1_master_init();
 	i2c1_slave_init(SLAVE_ADDRESS);
-		
-	_MI2C1IF = 0;
-	_MI2C1IE = 1; 
-	
+
 	I2C1CONbits.I2CEN = 1;
 }
 
 void i2c1_master_init(void) {
 	I2C1BRG = 0x009D;		// 100 kHz @ Tcy = 16 MHz
+
+	_MI2C1IF = 0;
+	_MI2C1IE = 1; 
 }
 
-void i2c1_slave_init(unsigned char address) {
+void i2c1_slave_init(uint8_t address) {
 	I2C1ADD = address;
 	I2C1MSK = 0;
 
@@ -50,28 +60,37 @@ void i2c1_slave_init(unsigned char address) {
 	_SI2C1IE = 1;
 }
 
-void i2c1_master_stream_start(unsigned char addr, unsigned char *data, uint16_t length) {
+void i2c1_master_writ_stream(uint8_t addr, uint16_t reg, uint8_t *data, uint8_t length) {
     while(i2c_busy); 			// Ensure previous transfer is done
     
-    i2c_addr = addr << 1;
+    i2c_addr = addr;
+	reg_addr = reg;
     tx_ptr = data;
     tx_count = length;
+
+	is_read = 0;
+
     i2c_busy = 1;
     i2c_state = I2C_START;
     
     I2C1CONbits.SEN = 1;		// Trigger Start Condition
 }
 
-void i2c1_master_read_trigger(unsigned char addr, unsigned char register_addr) {
+void i2c1_master_read_stream(uint8_t addr, uint16_t reg, uint8_t *dest, uint8_t length) {
     while(i2c_busy);			// Ensure previous transfer is done
     
-    i2c_addr = addr << 1 | 1;	// Shift for R/nW bit (1)
-    tx_ptr = &register_addr;	// Point to the single trigger byte
-    tx_count = 1;
+    i2c_addr = addr;
+    reg_addr = reg;
+    rx_ptr = dest;
+    rx_count = length;
+
+	is_read = 1;
+    
     i2c_busy = 1;
     i2c_state = I2C_START;
-    
+
     I2C1CONbits.SEN = 1;		// Trigger Start Condition
+}
 
 /**
  * Master I2C1 Interrupt Service Routine
@@ -79,17 +98,40 @@ void i2c1_master_read_trigger(unsigned char addr, unsigned char register_addr) {
 
 void __attribute__((interrupt, no_auto_psv)) _MI2C1Interrupt(void) {
 	switch (i2c_state) {
-		case I2C_START:
-			i2c_state = I2C_SEND_ADDR;
-			I2C1TRN = i2c_addr;
-			break;
+        case I2C_START:
+            i2c_state = I2C_SEND_ADDR_W;
+            I2C1TRN = (i2c_addr << 1); 		// Always start with a Write to set the register
+            break;
 
-		case I2C_SEND_ADDR:
-		case I2C_SEND_DATA:
-			if (tx_count > 0) {
-                i2c_state = I2C_SEND_DATA;
-				I2C1TRN = *tx_ptr;				// Send the data or trigger
-                if (tx_count > 1) tx_ptr++; 	// Send next byte in stream if exists.
+        case I2C_SEND_ADDR_W:
+            i2c_state = I2C_SEND_REG_HI;
+            I2C1TRN = (reg_addr >> 8);
+            break;
+
+        case I2C_SEND_REG_HI:
+            i2c_state = I2C_SEND_REG_LO;
+            I2C1TRN = (reg_addr & 0xFF);
+            break;
+
+        case I2C_SEND_REG_LO:
+            if (is_read) {
+                i2c_state = I2C_RESTART;
+                I2C1CONbits.RSEN = 1; // Trigger Repeated Start for Reading
+            } else {
+                if (tx_count > 0) {
+                    i2c_state = I2C_TX_DATA;
+                    I2C1TRN = *tx_ptr++;
+                    tx_count--;
+                } else {
+                    i2c_state = I2C_STOP;
+                    I2C1CONbits.PEN = 1;
+                }
+            }
+            break;
+
+        case I2C_TX_DATA:
+            if (tx_count > 0) {
+                I2C1TRN = *tx_ptr++;
                 tx_count--;
             } else {
                 i2c_state = I2C_STOP;
@@ -97,18 +139,46 @@ void __attribute__((interrupt, no_auto_psv)) _MI2C1Interrupt(void) {
             }
             break;
 
-		case I2C_STOP:
-			i2c_state = I2C_IDLE;
-			i2c_busy = 0;
-			break;
-			
-		default:
-			i2c_state = I2C_IDLE;
-			i2c_busy = 0;
-			break;
-	}
+        case I2C_RESTART:
+            i2c_state = I2C_SEND_ADDR_R;
+            I2C1TRN = (i2c_addr << 1) | 0x1; // Switch to Read Address
+            break;
 
-	_MI2C1IF = 0;							// Clear interrupt flag
+        case I2C_SEND_ADDR_R:
+            i2c_state = I2C_RX_DATA;
+            I2C1CONbits.RCEN = 1; // Enable Receiver
+            break;
+
+        case I2C_RX_DATA:
+            *rx_ptr++ = I2C1RCV;
+            rx_count--;
+            i2c_state = I2C_SEND_ACK;
+            I2C1CONbits.ACKDT = (data_count == 0); // NACK if last byte, ACK otherwise
+            I2C1CONbits.ACKEN = 1;
+            break;
+
+        case I2C_SEND_ACK:
+            if (rx_count > 0) {
+                i2c_state = I2C_RX_DATA;
+                I2C1CONbits.RCEN = 1;
+            } else {
+                i2c_state = I2C_STOP;
+                I2C1CONbits.PEN = 1;
+            }
+            break;
+
+        case I2C_STOP:
+            i2c_state = I2C_IDLE;
+            i2c_busy = 0;
+            break;
+
+        default:
+            i2c_busy = 0;
+            i2c_state = I2C_IDLE;
+            break;
+    }
+
+    _MI2C1IF = 0;							// Clear interrupt flag
 }
 
 /**
@@ -116,12 +186,11 @@ void __attribute__((interrupt, no_auto_psv)) _MI2C1Interrupt(void) {
  */
 
 void __attribute__((interrupt, auto_psv)) _SI2C1Interrupt(void) {
-    uint16_t temp;
-    if (I2C1STATbits.D_A == 1) {					// Data byte received
+    uint8_t temp;
+
+    if (I2C1STATbits.R_W == 0 && I2C1STATbits.D_A == 1) {	// Data byte received
         temp = I2C1RCV;
-        if (rx_buffer_ptr != NULL) {
-            BUFFER_ForcePush(rx_buffer_ptr, temp);	// Store in circular buffer
-        }
+        BUFFER_ForcePush(rx_buffer_ptr, temp);		// Store in circular buffer
     } else {
         temp = I2C1RCV;								// Dummy read for address match
     }

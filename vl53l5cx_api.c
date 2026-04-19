@@ -245,8 +245,8 @@ uint8_t vl53l5cx_init(
 	uint8_t pipe_ctrl[] = {VL53L5CX_NB_TARGET_PER_ZONE, 0x00, 0x01, 0x00};
 	uint32_t single_range = 0x01;
 
-	p_dev->default_xtalk = (uint8_t*)VL53L5CX_DEFAULT_XTALK;
-	p_dev->default_configuration = (uint8_t*)VL53L5CX_DEFAULT_CONFIGURATION;
+	// p_dev->default_xtalk = (uint8_t*)VL53L5CX_DEFAULT_XTALK;
+	// p_dev->default_configuration = (uint8_t*)VL53L5CX_DEFAULT_CONFIGURATION;
 	p_dev->is_auto_stop_enabled = (uint8_t)0x0;
 
 	/* SW reboot sequence */
@@ -275,6 +275,7 @@ uint8_t vl53l5cx_init(
 	/* Wait for sensor booted (several ms required to get sensor ready ) */
 	status |= WrByte(&(p_dev->platform), 0x7fff, 0x00);
 	status |= _vl53l5cx_poll_for_answer(p_dev, 1, 0, 0x06, 0xff, 1);
+
 	if(status != (uint8_t)0){
 		goto exit;
 	}
@@ -319,14 +320,11 @@ uint8_t vl53l5cx_init(
 
 	/* Download FW into VL53L5 */
 	status |= WrByte(&(p_dev->platform), 0x7fff, 0x09);
-	status |= WrMulti(&(p_dev->platform),0,
-		(uint8_t*)&VL53L5CX_FIRMWARE[0],0x8000);
+	status |= WrEEPROM(&(p_dev->platform), 0, 0x00000, 0x8000);
 	status |= WrByte(&(p_dev->platform), 0x7fff, 0x0a);
-	status |= WrMulti(&(p_dev->platform),0,
-		(uint8_t*)&VL53L5CX_FIRMWARE[0x8000],0x8000);
+	status |= WrEEPROM(&(p_dev->platform), 0, 0x08000, 0x8000);
 	status |= WrByte(&(p_dev->platform), 0x7fff, 0x0b);
-	status |= WrMulti(&(p_dev->platform),0,
-		(uint8_t*)&VL53L5CX_FIRMWARE[0x10000],0x5000);
+	status |= WrEEPROM(&(p_dev->platform), 0, 0x10000, 0x5000);
 	status |= WrByte(&(p_dev->platform), 0x7fff, 0x01);
 
 	/* Check if FW correctly downloaded */

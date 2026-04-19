@@ -81,6 +81,8 @@
  * @brief This buffer contains the VL53L5CX firmware (MM1.2)
  */
 
+/*
+
 const uint8_t VL53L5CX_FIRMWARE[] = {
 	
  0xe0, 0x04, 0x07, 0x68,
@@ -21589,6 +21591,8 @@ const uint8_t VL53L5CX_FIRMWARE[] = {
  0x00, 0x00, 0x00, 0x00,
 
 };
+
+*/
 
 /**
  * @brief This buffer contains the VL53L5CX default configuration.
