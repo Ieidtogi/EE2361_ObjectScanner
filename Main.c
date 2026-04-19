@@ -9,6 +9,7 @@
 #include "ASMLib.h"
 #include "Button.h"
 #include "CirBuf.h"
+#include "EEPROM.h"
 #include "I2CLib.h"
 #include "TOFLib.h"
 
@@ -23,13 +24,45 @@
 #pragma config IOL1WAY = OFF       // IOLOCK Protection (IOLOCK may be changed via unlocking seq)
 #pragma config OSCIOFNC = ON       // Primary Oscillator I/O Function (CLKO/RC15 functions as I/O pin)
 #pragma config FCKSM = CSECME      // Clock Switching and Monitor (Clock switching is enabled, 
-                                       // Fail-Safe Clock Monitor is enabled)
+									   // Fail-Safe Clock Monitor is enabled)
 #pragma config FNOSC = FRCPLL      // Oscillator Select (Fast RC Oscillator with PLL module (FRCPLL))
 
+#define true 1
+#define false 0
+
+struct buffer_t* myRxBuf;
+struct EEPROM* myEEPROM_1;
+struct EEPROM* myEEPROM_2;
+
 void setup(void) {
-    // setup stuff
+	CLKDIVbits.RCDIV = 0b000;
+
+	AD1PCFG = 0x9FFF;
+	
+	TRISA = 0x0000;
+	TRISB = 0x0000;
+
+	LATA = 0xFFFF;
+	LATB = 0xFFFF;
+
+	// Initializations
+	i2c1_init(&myRxBuf);
+	tof_init();
+
+	myRxBuf = buffer_init();
+	myEEPROM_1 = eeprom_init(0xA0, 65536, 128);
+	myEEPROM_1 = eeprom_init(0xA1, 65536, 128);
+	
+	// ISR Priority Configuration
+	_MI2C1IP = 6;
 }
 
 int main(void) {
-    // main stuff
+	setup();
+	unsigned long int count = 0;
+
+	while (true) {
+		count++;
+	}
+	
 }

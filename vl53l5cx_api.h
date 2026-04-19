@@ -17,8 +17,6 @@
 #pragma anon_unions
 #endif
 
-
-
 #include "platform.h"
 
 /**

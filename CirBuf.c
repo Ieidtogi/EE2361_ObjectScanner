@@ -9,12 +9,14 @@
 
 /* Struct Helper Function */
 
-void BUFFER_Init(BUFFER_t *f) {
+struct buffer_t* buffer_init(void) {
+    struct buffer_t* f = malloc(sizeof(struct buffer_t));
     f->head = 0;
     f->tail = 0;
+    return f;
 }
 
-int BUFFER_Push(BUFFER_t *f, uint16_t data) {
+int buffer_push(buffer_t *f, uint16_t data) {
     uint16_t next = (f->tail + 1) & BUFFER_MASK;
 
     if (next == f->head) {
@@ -26,7 +28,7 @@ int BUFFER_Push(BUFFER_t *f, uint16_t data) {
     return 1;       // Buffer Push Success
 }
 
-int BUFFER_ForcePush(BUFFER_t *f, uint16_t data) {
+int buffer_force_push(buffer_t *f, uint16_t data) {
     uint16_t next = (f->tail + 1) & BUFFER_MASK;
     
     if (next == f->head) {
@@ -38,7 +40,7 @@ int BUFFER_ForcePush(BUFFER_t *f, uint16_t data) {
     return 1;       // Buffer Push Success
 }
 
-int BUFFER_Pop(BUFFER_t *f) {
+int buffer_pop(buffer_t *f) {
     if (f->head == f->tail) {
         return 0;   // Buffer Empty
     }
@@ -49,7 +51,7 @@ int BUFFER_Pop(BUFFER_t *f) {
     return temp;    // Buffer Pop Success
 }
 
-int BUFFER_IsEmpty(BUFFER_t *f) {
+int buffer_is_empty(buffer_t *f) {
     if (f->head == f->tail) {
         return 0;   // Buffer Empty
     }
@@ -57,7 +59,7 @@ int BUFFER_IsEmpty(BUFFER_t *f) {
     return 1;       // Buffer Not Empty 
 }
 
-double BUFFER_Average(BUFFER_t *f) {
+double buffer_average(buffer_t *f) {
     uint32_t sum = 0;
     uint16_t count = 0;
     uint16_t current = f->head;

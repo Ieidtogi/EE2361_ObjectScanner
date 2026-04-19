@@ -12,7 +12,7 @@
 extern "C" {
 #endif
 	
-
+    void tof_init(void);
 
 #ifdef	__cplusplus
 }

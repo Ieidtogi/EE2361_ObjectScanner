@@ -19,19 +19,19 @@ extern "C" {
     #define BUFFER_MASK (BUFFER_SIZE - 1)
 
     /* Buffer Struct */
-    typedef struct {
+    typedef struct buffer_t {
         uint16_t buffer[BUFFER_SIZE];
         volatile uint16_t head;
         volatile uint16_t tail;
-    } BUFFER_t;
+    } buffer_t;
 
     /* Function Prototypes */
-    void BUFFER_Init(BUFFER_t *f);
-    int BUFFER_Push(BUFFER_t *f, uint16_t data);
-    int BUFFER_ForcePush(BUFFER_t *f, uint16_t data);
-    int BUFFER_Pop(BUFFER_t *f);
-    int BUFFER_IsEmpty(BUFFER_t *f);
-    double BUFFER_Average(BUFFER_t *f);
+    struct buffer_t* buffer_init(void);
+    int buffer_push(buffer_t *f, uint16_t data);
+    int buffer_force_push(buffer_t *f, uint16_t data);
+    int buffer_pop(buffer_t *f);
+    int buffer_is_empty(buffer_t *f);
+    double buffer_average(buffer_t *f);
 
 #ifdef	__cplusplus
 }

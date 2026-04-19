@@ -7,3 +7,6 @@
 
 #include "TOFLib.h"
 
+void tof_init(void) {
+    
+}
