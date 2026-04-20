@@ -5,6 +5,8 @@
  * Created on April 10, 2026, 12:30 PM
  */
 
+#include <stdlib.h>
+
 #ifndef EEPROM_H
 #define	EEPROM_H
 

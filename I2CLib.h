@@ -32,8 +32,8 @@ extern "C" {
 		I2C_STOP
 	} I2C_STATE_t;
 
-	extern uint8_t i2c_busy = 0;
-	extern const buffer_t *rx_buffer;
+	extern volatile uint8_t i2c_busy;
+	extern buffer_t *rx_buffer;
 
 	/* I2C Function Prototype */
 	void i2c1_init(buffer_t *rxBuf);

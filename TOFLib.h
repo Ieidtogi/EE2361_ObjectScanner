@@ -18,7 +18,7 @@ extern "C" {
 	extern VL53L5CX_Configuration 	tof_dev;
 	extern VL53L5CX_ResultsData 	tof_results;
 
-	extern EEPROM *fw_eeproms[2];
+	extern const EEPROM *fw_eeproms[2];
 	
 	/**
 	 * @brief Initializes the VL53L5CX sensor, including firmware upload from EEPROM.

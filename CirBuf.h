@@ -6,6 +6,7 @@
  */
 
 #include <stdint.h>
+#include <stdlib.h>
 
 #ifndef CIRBUF_H
 #define	CIRBUF_H

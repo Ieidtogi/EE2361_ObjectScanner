@@ -12,7 +12,7 @@
 VL53L5CX_Configuration 	tof_dev;
 VL53L5CX_ResultsData 	tof_results;
 
-static const EEPROM *fw_eeproms[2];
+const EEPROM *fw_eeproms[2];
 
 uint8_t tof_init(EEPROM *eeprom1, EEPROM *eeprom2) {
     uint8_t status = VL53L5CX_STATUS_OK;

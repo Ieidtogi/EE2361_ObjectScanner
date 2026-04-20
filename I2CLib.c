@@ -9,7 +9,7 @@
 #include "I2CLib.h"
 
 volatile I2C_STATE_t i2c_state = I2C_IDLE;
-static const buffer_t *rx_buffer; 		// Pointer to the circular buffer
+buffer_t *rx_buffer; 		// Pointer to the circular buffer
 
 volatile uint8_t i2c_addr;
 volatile uint16_t reg_addr;
@@ -20,8 +20,6 @@ volatile uint8_t *rx_ptr;
 volatile uint16_t tx_count;
 volatile uint16_t rx_count;
 
-static uint16_t reg_to_read;
-static uint8_t i2c_addr;
 static uint8_t is_read;
 
 volatile uint8_t i2c_busy = 0;
@@ -153,7 +151,7 @@ void __attribute__((interrupt, no_auto_psv)) _MI2C1Interrupt(void) {
             *rx_ptr++ = I2C1RCV;
             rx_count--;
             i2c_state = I2C_SEND_ACK;
-            I2C1CONbits.ACKDT = (data_count == 0); // NACK if last byte, ACK otherwise
+            I2C1CONbits.ACKDT = (rx_count <= 0); // NACK if last byte, ACK otherwise
             I2C1CONbits.ACKEN = 1;
             break;
 
@@ -190,7 +188,7 @@ void __attribute__((interrupt, auto_psv)) _SI2C1Interrupt(void) {
 
     if (I2C1STATbits.R_W == 0 && I2C1STATbits.D_A == 1) {	// Data byte received
         temp = I2C1RCV;
-        BUFFER_ForcePush(rx_buffer_ptr, temp);		// Store in circular buffer
+        buffer_force_push(rx_buffer, temp);		// Store in circular buffer
     } else {
         temp = I2C1RCV;								// Dummy read for address match
     }

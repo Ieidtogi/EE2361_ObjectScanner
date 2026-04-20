@@ -142,7 +142,7 @@ uint8_t WrEEPROM(
         while(i2c_busy);
 
         // Write to sensor (Register address increments inside the sensor)
-        i2c1_master_write_stream(p_platform->address, RegisterAddr, buffer, chunk);
+        i2c1_master_writ_stream(p_platform->address, RegisterAddr, buffer, chunk);
         while(i2c_busy);
 
         cur_addr += chunk;

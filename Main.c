@@ -50,7 +50,7 @@ void setup(void) {
 	myEEPROM_1 = eeprom_init(0xA1, 65536, 128);
 
 	// Initializations
-	i2c1_init(&myRxBuf);
+	i2c1_init(myRxBuf);
 	tof_init(myEEPROM_1, myEEPROM_2);
 
 	// ISR Priority Configuration
