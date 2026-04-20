@@ -12,7 +12,9 @@
 VL53L5CX_Configuration 	tof_dev;
 VL53L5CX_ResultsData 	tof_results;
 
-const EEPROM *fw_eeproms[2];
+EEPROM *fw_eeproms[2];
+
+uint16_t matrix[8][8];
 
 uint8_t tof_init(EEPROM *eeprom1, EEPROM *eeprom2) {
     uint8_t status = VL53L5CX_STATUS_OK;
@@ -36,7 +38,7 @@ uint8_t tof_init(EEPROM *eeprom1, EEPROM *eeprom2) {
     if (status) return status;
 
     // 4. Default Settings
-    status |= vl53l5cx_set_resolution(&tof_dev, VL53L5CX_RESOLUTION_4X4);
+    status |= vl53l5cx_set_resolution(&tof_dev, VL53L5CX_RESOLUTION_8X8);
     status |= vl53l5cx_set_ranging_frequency_hz(&tof_dev, 30); // 30Hz
     status |= vl53l5cx_set_ranging_mode(&tof_dev, VL53L5CX_RANGING_MODE_CONTINUOUS);
 
@@ -59,8 +61,33 @@ uint8_t tof_get_data(void) {
     
     if (ready) {
         vl53l5cx_get_ranging_data(&tof_dev, &tof_results);
+        process_tof_matrix(&tof_results, VL53L5CX_RESOLUTION_8X8);
         return 1;
     }
 
     return 0;
+}
+
+void process_tof_matrix(VL53L5CX_ResultsData *p_results, uint8_t resolution) {
+    int i, j;
+    uint8_t zones_per_line = (resolution == VL53L5CX_RESOLUTION_4X4) ? 4 : 8;
+
+    for (i = 0; i < zones_per_line; i++) {       // Rows
+        for (j = 0; j < zones_per_line; j++) {   // Columns
+            // Calculate the 1D index from the 2D coordinates
+            int index = (i * zones_per_line) + j;
+            
+            uint16_t dist = p_results->distance_mm[index];
+            
+            matrix[i][j] = dist;
+            
+//            uint8_t status = p_results->target_status[index];
+//            if (status == 5 || status == 9) { 
+//                // Valid data - 'dist' is the millimeter value in the matrix
+//                // You could store this in a 2D array: my_matrix[i][j] = dist;
+//            } else {
+//                // Invalid data or no target
+//            }
+        }
+    }
 }

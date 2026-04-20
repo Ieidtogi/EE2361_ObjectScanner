@@ -18,7 +18,8 @@ extern "C" {
 	extern VL53L5CX_Configuration 	tof_dev;
 	extern VL53L5CX_ResultsData 	tof_results;
 
-	extern const EEPROM *fw_eeproms[2];
+	extern EEPROM *fw_eeproms[2];
+    extern uint16_t matrix[8][8];
 	
 	/**
 	 * @brief Initializes the VL53L5CX sensor, including firmware upload from EEPROM.
@@ -43,6 +44,8 @@ extern "C" {
 	 * @return 1 if new data is available, 0 otherwise.
 	 */
 	uint8_t tof_get_data(void);
+    
+    void process_tof_matrix(VL53L5CX_ResultsData *p_results, uint8_t resolution);
 
 #ifdef	__cplusplus
 }

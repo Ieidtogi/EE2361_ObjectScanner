@@ -21,11 +21,9 @@ extern "C" {
 		int page;
 	} EEPROM;
 
-	struct EEPROM* eeprom_init(unsigned char addr, int size, int page);
+	struct EEPROM* eeprom_init(unsigned char addr);
 
 	unsigned char eeprom_addr(EEPROM* eeprom);
-	int eeprom_size(EEPROM* eeprom);
-	int eeprom_page(EEPROM* eeprom);
 
 #ifdef	__cplusplus
 }
