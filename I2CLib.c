@@ -29,7 +29,8 @@ void i2c1_init(buffer_t *rxBuf) {
 	I2C1CON = 0;
 	I2C1TRN = 0;
 	I2C1STAT = 0;
-	
+	I2C1TRN = 0;
+    
 	// SDA1/SCL1, RP9/RP8 Use Pull Up Mode
 	CNPU2bits.CN21PUE = 1;			// Pull Up Mode RP9
 	CNPU2bits.CN22PUE = 1;			// Pull Up Mode RP8
@@ -39,8 +40,9 @@ void i2c1_init(buffer_t *rxBuf) {
 	// I2C Start
 	i2c1_master_init();
 	i2c1_slave_init(SLAVE_ADDRESS);
-    
-    I2C1TRN = 0;
+
+    // ISR Priority Configuration
+	_MI2C1IP = 6;
 
 	I2C1CONbits.I2CEN = 1;
 }
@@ -51,8 +53,6 @@ void i2c1_master_init(void) {
 
 	_MI2C1IF = 0;
 	_MI2C1IE = 1;
-    
-    I2C1CONbits.I2CEN = 1;
 }
 
 void i2c1_slave_init(uint8_t address) {
@@ -61,8 +61,6 @@ void i2c1_slave_init(uint8_t address) {
 
 	_SI2C1IF = 0;
 	_SI2C1IE = 1;
-    
-    I2C1CONbits.I2CEN = 1;
 }
 
 void i2c1_wait(void) {
@@ -81,10 +79,9 @@ void i2c1_master_writ_stream(uint8_t addr, uint16_t reg, uint8_t *data, uint8_t 
 	is_read = 0;
 
     i2c_busy = 1;
-    i2c_state = I2C_SEND_ADDR_W;
+    i2c_state = I2C_START;
     
     I2C1CONbits.SEN = 1;		// Trigger Start Condition
-    I2C1TRN = (i2c_addr << 1);
 }
 
 void i2c1_master_read_stream(uint8_t addr, uint16_t reg, uint8_t *dest, uint8_t length) {
@@ -98,10 +95,9 @@ void i2c1_master_read_stream(uint8_t addr, uint16_t reg, uint8_t *dest, uint8_t 
 	is_read = 1;
     
     i2c_busy = 1;
-    i2c_state = I2C_SEND_ADDR_W;
+    i2c_state = I2C_START;
     
     I2C1CONbits.SEN = 1;		// Trigger Start Condition
-    I2C1TRN = (i2c_addr << 1);
 }
 
 /**

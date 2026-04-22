@@ -5,9 +5,16 @@
  * Created on April 8, 2026, 12:29 PM
  */
 
+#include "xc.h"
+#include "ASMLib.h"
 #include "TOFLib.h"
 #include "I2CLib.h"
 #include <string.h>
+
+#define INT LATBbits.LATB11
+#define RST LATBbits.LATB10
+#define LPN LATBbits.LATB7
+#define PWR LATBbits.LATB6
 
 VL53L5CX_Configuration 	tof_dev;
 VL53L5CX_ResultsData 	tof_results;
@@ -15,6 +22,12 @@ VL53L5CX_ResultsData 	tof_results;
 EEPROM *fw_eeproms[2];
 
 uint16_t matrix[8][8];
+
+void delay(int ms) {
+    for (int i = 0; i < ms; i++) {
+        delay1m();
+    }
+}
 
 uint8_t tof_init(EEPROM *eeprom1, EEPROM *eeprom2) {
     uint8_t status = VL53L5CX_STATUS_OK;
@@ -26,18 +39,35 @@ uint8_t tof_init(EEPROM *eeprom1, EEPROM *eeprom2) {
 
     // Configure the Platform Structure
     tof_dev.platform.address = VL53L5CX_DEFAULT_I2C_ADDRESS;
-    
-    // Hardware Check: Is the sensor there?
-    status = vl53l5cx_is_alive(&tof_dev, &is_alive);
-    if (status || !is_alive) return VL53L5CX_STATUS_ERROR;
 
+    LPN = 0;
+    PWR = 0;
+    RST = 0;
+
+    delay(1000);
+
+    LPN = 1;
+    PWR = 1;
+    RST = 1;
+
+    delay(50);
+
+    LPN = 1;
+    RST = 0;
+    
+    delay(50);
+    
     // Sensor Initialization (Firmware Loading)
     // Note: You must ensure platform.c uses the EEPROM to stream data
     // during this call because the PIC24 cannot hold the FW array.
     status = vl53l5cx_init(&tof_dev);
     if (status) return status;
+    
+    // Hardware Check
+    status = vl53l5cx_is_alive(&tof_dev, &is_alive);
+    if (status || !is_alive) return VL53L5CX_STATUS_ERROR;
 
-    // 4. Default Settings
+    // Default Settings
     status |= vl53l5cx_set_resolution(&tof_dev, VL53L5CX_RESOLUTION_8X8);
     status |= vl53l5cx_set_ranging_frequency_hz(&tof_dev, 30); // 30Hz
     status |= vl53l5cx_set_ranging_mode(&tof_dev, VL53L5CX_RANGING_MODE_CONTINUOUS);

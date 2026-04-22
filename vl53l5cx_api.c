@@ -248,10 +248,9 @@ uint8_t vl53l5cx_init(
 	// p_dev->default_xtalk = (uint8_t*)VL53L5CX_DEFAULT_XTALK;
 	// p_dev->default_configuration = (uint8_t*)VL53L5CX_DEFAULT_CONFIGURATION;
 	p_dev->is_auto_stop_enabled = (uint8_t)0x0;
-    
-    Reset_Sensor(&(p_dev->platform));
 
 	/* SW reboot sequence */
+    status |= WrByte(&(p_dev->platform), 0x7fff, 0x00);
 	status |= WrByte(&(p_dev->platform), 0x7fff, 0x00);
 	status |= WrByte(&(p_dev->platform), 0x0009, 0x04);
 	status |= WrByte(&(p_dev->platform), 0x000F, 0x40);
@@ -268,7 +267,7 @@ uint8_t vl53l5cx_init(
 	status |= WrByte(&(p_dev->platform), 0x0103, 0x01);
 	status |= WrByte(&(p_dev->platform), 0x000C, 0x00);
 	status |= WrByte(&(p_dev->platform), 0x000F, 0x43);
-	status |= WaitMs(&(p_dev->platform), 1);
+	status |= WaitMs(&(p_dev->platform), 10);
 
 	status |= WrByte(&(p_dev->platform), 0x000F, 0x40);
 	status |= WrByte(&(p_dev->platform), 0x000A, 0x01);
@@ -276,6 +275,7 @@ uint8_t vl53l5cx_init(
 
 	/* Wait for sensor booted (several ms required to get sensor ready ) */
 	status |= WrByte(&(p_dev->platform), 0x7fff, 0x00);
+    status |= WrByte(&(p_dev->platform), 0x7fff, 0x00);
 	status |= _vl53l5cx_poll_for_answer(p_dev, 1, 0, 0x06, 0xff, 1);
 
 	if(status != (uint8_t)0){

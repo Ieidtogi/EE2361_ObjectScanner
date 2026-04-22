@@ -42,27 +42,31 @@ void setup(void) {
 	TRISA = 0x0000;
 	TRISB = 0x0000;
 
-	LATA = 0x1111;
-	LATB = 0x1111;
+	LATA = 0xffff;
+	LATB = 0xffff;
 	
 	myRxBuf = buffer_init();
-	myEEPROM_1 = eeprom_init(0xA0);
-	myEEPROM_2 = eeprom_init(0xA1);
+	myEEPROM_1 = eeprom_init(0x50);
+	myEEPROM_2 = eeprom_init(0x51);
 
 	// Initializations
 	i2c1_init(myRxBuf);
 	tof_init(myEEPROM_1, myEEPROM_2);
-
-	// ISR Priority Configuration
-	_MI2C1IP = 6;
 }
 
 int main(void) {
 	setup();
 	unsigned long int count = 0;
 
+    tof_start();
+    
+    
 	while (true) {
-		count++;
+		while(tof_get_data()) {
+            delay(100);
+        }
+        matrix;
+        count++;
 	}
 	
 }

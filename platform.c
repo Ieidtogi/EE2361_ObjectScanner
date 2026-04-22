@@ -66,8 +66,10 @@
 #include "TOFLib.h"
 #include "platform.h"
 
-#define PWR LATBbits.LATB6
+#define INT LATBbits.LATB11
+#define I2C_RST LATBbits.LATB10
 #define LPN LATBbits.LATB7
+#define PWR LATBbits.LATB6
 
 uint8_t RdByte(
 		VL53L5CX_Platform *p_platform,
