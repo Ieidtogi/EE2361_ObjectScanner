@@ -7,12 +7,16 @@
 
 #include "EEPROM.h"
 
-struct EEPROM* eeprom_init(unsigned char addr) {
-	struct EEPROM* eeprom = malloc(sizeof(struct EEPROM));
-	eeprom->addr = addr;
-	return eeprom;
+struct EEPROM* eeprom_init(uint8_t addr) {
+	struct EEPROM* e = malloc(sizeof(struct EEPROM));
+    
+	if (e != NULL) {
+        e->addr = addr;
+    }
+    
+	return e;
 }
 
-unsigned char eeprom_addr(EEPROM* eeprom) {
-	return eeprom->addr;
+uint8_t eeprom_addr(EEPROM* e) {
+	return e->addr;
 }

@@ -248,6 +248,8 @@ uint8_t vl53l5cx_init(
 	// p_dev->default_xtalk = (uint8_t*)VL53L5CX_DEFAULT_XTALK;
 	// p_dev->default_configuration = (uint8_t*)VL53L5CX_DEFAULT_CONFIGURATION;
 	p_dev->is_auto_stop_enabled = (uint8_t)0x0;
+    
+    Reset_Sensor(&(p_dev->platform));
 
 	/* SW reboot sequence */
 	status |= WrByte(&(p_dev->platform), 0x7fff, 0x00);

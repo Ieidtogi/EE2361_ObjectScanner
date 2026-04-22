@@ -60,10 +60,14 @@
 *
 *******************************************************************************/
 
+#include "xc.h"
 #include "ASMLib.h"
 #include "I2CLib.h"
 #include "TOFLib.h"
 #include "platform.h"
+
+#define PWR LATBbits.LATB6
+#define LPN LATBbits.LATB7
 
 uint8_t RdByte(
 		VL53L5CX_Platform *p_platform,
@@ -191,11 +195,15 @@ uint8_t Reset_Sensor(
 	/* Set pin LPN to LOW */
 	/* Set pin AVDD to LOW */
 	/* Set pin VDDIO  to LOW */
+    LPN = 0;
+    PWR = 0;
 	WaitMs(p_platform, 100);
 
 	/* Set pin LPN of to HIGH */
 	/* Set pin AVDD of to HIGH */
 	/* Set pin VDDIO of  to HIGH */
+    LPN = 1;
+    PWR = 1;
 	WaitMs(p_platform, 100);
 
 	return 0;

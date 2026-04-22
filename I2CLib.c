@@ -39,15 +39,20 @@ void i2c1_init(buffer_t *rxBuf) {
 	// I2C Start
 	i2c1_master_init();
 	i2c1_slave_init(SLAVE_ADDRESS);
+    
+    I2C1TRN = 0;
 
 	I2C1CONbits.I2CEN = 1;
 }
 
 void i2c1_master_init(void) {
 	I2C1BRG = 0x009D;		// 100 kHz @ Tcy = 16 MHz
+    I2C1BRG = 0x0025;       // 400 kHz @ Tcy = 16 MHz
 
 	_MI2C1IF = 0;
-	_MI2C1IE = 1; 
+	_MI2C1IE = 1;
+    
+    I2C1CONbits.I2CEN = 1;
 }
 
 void i2c1_slave_init(uint8_t address) {
@@ -56,6 +61,13 @@ void i2c1_slave_init(uint8_t address) {
 
 	_SI2C1IF = 0;
 	_SI2C1IE = 1;
+    
+    I2C1CONbits.I2CEN = 1;
+}
+
+void i2c1_wait(void) {
+    while(I2C1CONbits.SEN || I2C1CONbits.PEN || I2C1CONbits.RCEN || 
+          I2C1CONbits.RSEN || I2C1STATbits.TRSTAT);
 }
 
 void i2c1_master_writ_stream(uint8_t addr, uint16_t reg, uint8_t *data, uint8_t length) {
@@ -69,9 +81,10 @@ void i2c1_master_writ_stream(uint8_t addr, uint16_t reg, uint8_t *data, uint8_t 
 	is_read = 0;
 
     i2c_busy = 1;
-    i2c_state = I2C_START;
+    i2c_state = I2C_SEND_ADDR_W;
     
     I2C1CONbits.SEN = 1;		// Trigger Start Condition
+    I2C1TRN = (i2c_addr << 1);
 }
 
 void i2c1_master_read_stream(uint8_t addr, uint16_t reg, uint8_t *dest, uint8_t length) {
@@ -85,9 +98,10 @@ void i2c1_master_read_stream(uint8_t addr, uint16_t reg, uint8_t *dest, uint8_t 
 	is_read = 1;
     
     i2c_busy = 1;
-    i2c_state = I2C_START;
-
+    i2c_state = I2C_SEND_ADDR_W;
+    
     I2C1CONbits.SEN = 1;		// Trigger Start Condition
+    I2C1TRN = (i2c_addr << 1);
 }
 
 /**
@@ -95,7 +109,15 @@ void i2c1_master_read_stream(uint8_t addr, uint16_t reg, uint8_t *dest, uint8_t 
  */
 
 void __attribute__((interrupt, no_auto_psv)) _MI2C1Interrupt(void) {
-	switch (i2c_state) {
+    // Check for NACK (except during Start/Stop/Restart sequences)
+    if (i2c_state != I2C_START && i2c_state != I2C_STOP && I2C1STATbits.ACKSTAT) {
+        i2c_state = I2C_STOP;
+        I2C1CONbits.PEN = 1; // Force a stop if slave NACKs
+        _MI2C1IF = 0;
+        return;
+    }
+
+    switch (i2c_state) {
         case I2C_START:
             i2c_state = I2C_SEND_ADDR_W;
             I2C1TRN = (i2c_addr << 1); 		// Always start with a Write to set the register
@@ -175,8 +197,8 @@ void __attribute__((interrupt, no_auto_psv)) _MI2C1Interrupt(void) {
             i2c_state = I2C_IDLE;
             break;
     }
-
-    _MI2C1IF = 0;							// Clear interrupt flag
+    
+    _MI2C1IF = 0;
 }
 
 /**
@@ -185,14 +207,14 @@ void __attribute__((interrupt, no_auto_psv)) _MI2C1Interrupt(void) {
 
 void __attribute__((interrupt, auto_psv)) _SI2C1Interrupt(void) {
     uint8_t temp;
-
+    
+    _SI2C1IF = 0;
+    
     if (I2C1STATbits.R_W == 0 && I2C1STATbits.D_A == 1) {	// Data byte received
         temp = I2C1RCV;
         buffer_force_push(rx_buffer, temp);		// Store in circular buffer
     } else {
         temp = I2C1RCV;								// Dummy read for address match
     }
-	
-    _SI2C1IF = 0;
 }
 

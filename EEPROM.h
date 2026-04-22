@@ -6,6 +6,7 @@
  */
 
 #include <stdlib.h>
+#include <stdint.h>
 
 #ifndef EEPROM_H
 #define	EEPROM_H
@@ -16,14 +17,12 @@ extern "C" {
 	
 	/* EEPROM Struct */
 	typedef struct EEPROM {
-		unsigned char addr;
-		int size;
-		int page;
+		uint8_t addr;
 	} EEPROM;
 
-	struct EEPROM* eeprom_init(unsigned char addr);
+	struct EEPROM* eeprom_init(uint8_t addr);
 
-	unsigned char eeprom_addr(EEPROM* eeprom);
+	unsigned char eeprom_addr(EEPROM* e);
 
 #ifdef	__cplusplus
 }

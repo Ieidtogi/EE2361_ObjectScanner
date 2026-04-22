@@ -42,12 +42,12 @@ void setup(void) {
 	TRISA = 0x0000;
 	TRISB = 0x0000;
 
-	LATA = 0xFFFF;
-	LATB = 0xFFFF;
+	LATA = 0x1111;
+	LATB = 0x1111;
 	
 	myRxBuf = buffer_init();
 	myEEPROM_1 = eeprom_init(0xA0);
-	myEEPROM_1 = eeprom_init(0xA1);
+	myEEPROM_2 = eeprom_init(0xA1);
 
 	// Initializations
 	i2c1_init(myRxBuf);
