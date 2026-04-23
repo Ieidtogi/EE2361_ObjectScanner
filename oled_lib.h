@@ -11,10 +11,11 @@
 #ifdef	__cplusplus
 extern "C" {
 #endif
-
-
-
-
+    void sendColor(short int red, short int green, short int blue);
+    void sendData(short int data);
+    void sendCommand(short int cmd);
+    void setPos(short int xStart, short int yStart, short int xEnd, short int yEnd);
+    void spi_init(void);
 #ifdef	__cplusplus
 }
 #endif
