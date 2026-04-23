@@ -8,6 +8,7 @@
 
 #include "xc.h"
 #include "Button.h"
+#include "oled_lib.h"
 
 // CW1: FLASH CONFIGURATION WORD 1 (see PIC24 Family Reference Manual 24.1)
 #pragma config ICS = PGx1          // Comm Channel Select (Emulator EMUC1/EMUD1 pins are shared with PGC1/PGD1)
@@ -29,13 +30,44 @@ void setup(void) {
 
 int main(void) {
     setup();
+    spi_init();
+    for (int i = 0; i < 6000; i++);
+    sendCommand(0xA6);
+    setPos(0, 0, 60, 31);
+    sendCommand(0x5C);
+    for(int i = 0; i < 999; i++) {
+        sendColor(0,48,0);
+    }
     initButton();
+//    sendCommand(0x5D);
     while(1) {
         if(isButtonPressed) {
             //Scan -> Display
             if (!isButtonPressed) {
+                //        setPos(64, 0, 127, 127);
+                //        sendCommand(0x5C);
+                //        sendData(0x0);
+                //        sendData(0x0);
+                //        sendCommand(0x5D);
+
+                //        setPos(10, 10, 20, 20);
+                //        sendCommand(0x5C);
+                //        sendData(0x40);
+                //        sendData(0xFF);
+                //        sendData(0x04);
+
+                //        
+                //        setPos(40, 40, 20, 20);
+                //        sendCommand(0x5C);
+                //        sendData(0x40);
+
+                //        setPos(30, 10, 40, 20);
+                //        sendCommand(0x5C);
+                //        sendData(0xFF);
+                //        sendData(0x0);
+                //        sendData(0x0);
                 isButtonPressed = 0;
             }
-        } 
+        }
     }
 }

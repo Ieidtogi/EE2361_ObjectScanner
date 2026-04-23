@@ -4,11 +4,11 @@ Tool Name:
   c:\program files\microchip\xc16\v2.10\bin\bin\..\bin/elf-ld.exe
 
 Command:
-  -TC:\\Users\\ikepr\\AppData\\Local\\Temp\\tmp00006244.00 \
-  -TC:\\Users\\ikepr\\AppData\\Local\\Temp\\tmp00006244.01 \
-  -TC:\\Users\\ikepr\\AppData\\Local\\Temp\\tmp00006244.02 \
-  -TC:\\Users\\ikepr\\AppData\\Local\\Temp\\tmp00006244.03 \
-  -TC:\\Users\\ikepr\\AppData\\Local\\Temp\\tmp00006244.04 \
+  -TC:\\Users\\ikepr\\AppData\\Local\\Temp\\tmp00007200.00 \
+  -TC:\\Users\\ikepr\\AppData\\Local\\Temp\\tmp00007200.01 \
+  -TC:\\Users\\ikepr\\AppData\\Local\\Temp\\tmp00007200.02 \
+  -TC:\\Users\\ikepr\\AppData\\Local\\Temp\\tmp00007200.03 \
+  -TC:\\Users\\ikepr\\AppData\\Local\\Temp\\tmp00007200.04 \
   -p24FJ64GA002 \
   --mdfp=C:/Program Files/Microchip/MPLABX/v6.25/packs/Microchip/PIC24F-GA-GB_DFP/1.10.375/xc16 \
   -o \
@@ -25,6 +25,7 @@ Command:
   -Lc:/program files/microchip/xc16/v2.10/bin/bin/../../support/dsPIC33F/gld \
   build/default/debug/Button.o \
   build/default/debug/Main.o \
+  build/default/debug/oled_lib.o \
   --defsym=__MPLAB_BUILD=1 \
   --defsym=__MPLAB_DEBUG=1 \
   --defsym=__DEBUG=1 \
@@ -73,10 +74,10 @@ Default Scalar Model: Small
 section                    address   length (PC units)   length (bytes) (dec)
 -------                    -------   -----------------   --------------------
 .text                        0x200               0x108           0x18c  (396)
-.text                        0x308                0x8e            0xd5  (213)
-.dinit                       0x396                 0x8             0xc  (12)
+.text                        0x308               0x2ec           0x462  (1122)
+.dinit                       0x5f4                 0x8             0xc  (12)
 
-                 Total "program" memory used (bytes):          0x26d  (621) <1%
+                 Total "program" memory used (bytes):          0x5fa  (1530) 2%
 
 
 "data" Memory  [Origin = 0x800, Length = 0x2000]
@@ -122,9 +123,14 @@ External Symbols in Program Memory (by address):
                   0x0002c8                  __T2Interrupt
                   0x0002dc                  __IC1Interrupt
                   0x000302                  __DefaultInterrupt
-                  0x000308                  _initButton
-                  0x000372                  _setup
-                  0x000378                  _main
+                  0x000308                  _spi_init
+                  0x0003b0                  _setPos
+                  0x0003d6                  _sendCommand
+                  0x0003f6                  _sendData
+                  0x000416                  _sendColor
+                  0x000526                  _initButton
+                  0x000590                  _setup
+                  0x000596                  _main
 
 External Symbols in Program Memory (by name):
 
@@ -135,9 +141,14 @@ External Symbols in Program Memory (by name):
                   0x000252                  __data_init_standard
                   0x00023c                  __psv_init
                   0x000200                  __resetPRI
-                  0x000308                  _initButton
-                  0x000378                  _main
-                  0x000372                  _setup
+                  0x000526                  _initButton
+                  0x000596                  _main
+                  0x000416                  _sendColor
+                  0x0003d6                  _sendCommand
+                  0x0003f6                  _sendData
+                  0x0003b0                  _setPos
+                  0x000590                  _setup
+                  0x000308                  _spi_init
 
 Memory Configuration
 
@@ -181,6 +192,7 @@ reserve_data_0x826
  *fill*             0x0826         0x2a00
 LOAD build/default/debug/Button.o
 LOAD build/default/debug/Main.o
+LOAD build/default/debug/oled_lib.o
                     0x0001                  __MPLAB_BUILD = 0x1
                     0x0001                  __MPLAB_DEBUG = 0x1
                     0x0001                  __DEBUG = 0x1
@@ -240,31 +252,36 @@ __CONFIG1
 .comment
  *(.comment)
 
-.debug_info       0x000000        0xe1a
+.debug_info       0x000000       0x1f69
  *(.debug_info)
  .debug_info      0x000000        0xcad build/default/debug/Button.o
- .debug_info      0x000cad        0x16d build/default/debug/Main.o
+ .debug_info      0x000cad        0x1a2 build/default/debug/Main.o
+ .debug_info      0x000e4f       0x111a build/default/debug/oled_lib.o
  *(.gnu.linkonce.wi.*)
 
-.debug_abbrev     0x000000        0x16e
+.debug_abbrev     0x000000        0x2c3
  *(.debug_abbrev)
  .debug_abbrev    0x000000        0x10b build/default/debug/Button.o
- .debug_abbrev    0x00010b         0x63 build/default/debug/Main.o
+ .debug_abbrev    0x00010b         0x88 build/default/debug/Main.o
+ .debug_abbrev    0x000193        0x130 build/default/debug/oled_lib.o
 
-.debug_line       0x000000        0x186
+.debug_line       0x000000        0x2f0
  *(.debug_line)
  .debug_line      0x000000        0x13c build/default/debug/Button.o
- .debug_line      0x00013c         0x4a build/default/debug/Main.o
+ .debug_line      0x00013c         0x56 build/default/debug/Main.o
+ .debug_line      0x000192        0x15e build/default/debug/oled_lib.o
 
-.debug_frame      0x000000         0xc4
+.debug_frame      0x000000        0x15a
  *(.debug_frame)
  .debug_frame     0x000000         0x7c build/default/debug/Button.o
  .debug_frame     0x00007c         0x48 build/default/debug/Main.o
+ .debug_frame     0x0000c4         0x96 build/default/debug/oled_lib.o
 
-.debug_str        0x000000         0x70
+.debug_str        0x000000         0xf4
  *(.debug_str)
  .debug_str       0x000000         0x60 build/default/debug/Button.o
  .debug_str       0x000060         0x10 build/default/debug/Main.o
+ .debug_str       0x000070         0x84 build/default/debug/oled_lib.o
 
 .debug_loc
  *(.debug_loc)
@@ -273,22 +290,26 @@ __CONFIG1
  *(.debug_macinfo)
 
 .debug_pubnames
-                  0x000000         0x7d
+                  0x000000         0xd2
  *(.debug_pubnames)
  .debug_pubnames
                   0x000000         0x58 build/default/debug/Button.o
  .debug_pubnames
                   0x000058         0x25 build/default/debug/Main.o
+ .debug_pubnames
+                  0x00007d         0x55 build/default/debug/oled_lib.o
 
 .debug_ranges
  *(.debug_ranges)
 
-.debug_aranges    0x000000         0x30
+.debug_aranges    0x000000         0x48
  *(.debug_aranges)
  .debug_aranges
                   0x000000         0x18 build/default/debug/Button.o
  .debug_aranges
                   0x000018         0x18 build/default/debug/Main.o
+ .debug_aranges
+                  0x000030         0x18 build/default/debug/oled_lib.o
                     0x0000                  WREG0 = 0x0
                     0x0000                  _WREG0 = 0x0
                     0x0002                  WREG1 = 0x2
@@ -878,22 +899,26 @@ LOAD default_isr
 LOAD data_init
 
 .debug_pubtypes
-                  0x000030        0x129
+                  0x000048        0x288
  .debug_pubtypes
-                  0x000030        0x117 build/default/debug/Button.o
+                  0x000048        0x117 build/default/debug/Button.o
  .debug_pubtypes
-                  0x000147         0x12 build/default/debug/Main.o
+                  0x00015f         0x12 build/default/debug/Main.o
+ .debug_pubtypes
+                  0x000171        0x15f build/default/debug/oled_lib.o
 
 __c30_signature
-                  0x000159         0x18
+                  0x0002d0         0x1e
  __c30_signature
-                  0x000159          0x6 build/default/debug/Button.o
+                  0x0002d0          0x6 build/default/debug/Button.o
  __c30_signature
-                  0x00015f          0x6 build/default/debug/Main.o
+                  0x0002d6          0x6 build/default/debug/Main.o
  __c30_signature
-                  0x000165          0x6 c:/program files/microchip/xc16/v2.10/bin/bin/../../lib\libc99-pic30-elf.a(crt0_standard.o)
+                  0x0002dc          0x6 build/default/debug/oled_lib.o
  __c30_signature
-                  0x00016b          0x6 c:/program files/microchip/xc16/v2.10/bin/bin/../../lib\libc99-pic30-elf.a(data_init_standard.o)
+                  0x0002e2          0x6 c:/program files/microchip/xc16/v2.10/bin/bin/../../lib\libc99-pic30-elf.a(crt0_standard.o)
+ __c30_signature
+                  0x0002e8          0x6 c:/program files/microchip/xc16/v2.10/bin/bin/../../lib\libc99-pic30-elf.a(data_init_standard.o)
 
 .nbss               0x0850          0x2
  .nbss              0x0850          0x2 build/default/debug/Button.o
@@ -916,12 +941,18 @@ __c30_signature
 .config_IESO      0x00abfc          0x2
  .config_IESO     0x00abfc          0x2 build/default/debug/Main.o
 
-.text             0x000308         0x8e
- .text            0x000308         0x6a build/default/debug/Button.o
-                  0x000308                  _initButton
- .text            0x000372         0x24 build/default/debug/Main.o
-                  0x000372                  _setup
-                  0x000378                  _main
+.text             0x000308        0x2ec
+ .text            0x000308        0x21e build/default/debug/oled_lib.o
+                  0x000308                  _spi_init
+                  0x0003b0                  _setPos
+                  0x0003d6                  _sendCommand
+                  0x0003f6                  _sendData
+                  0x000416                  _sendColor
+ .text            0x000526         0x6a build/default/debug/Button.o
+                  0x000526                  _initButton
+ .text            0x000590         0x64 build/default/debug/Main.o
+                  0x000590                  _setup
+                  0x000596                  _main
 
-.dinit            0x000396          0x8
- .dinit           0x000396          0x8 data_init
+.dinit            0x0005f4          0x8
+ .dinit           0x0005f4          0x8 data_init
