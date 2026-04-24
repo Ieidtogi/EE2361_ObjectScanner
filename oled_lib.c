@@ -131,14 +131,15 @@ void sendColor(short int red, short int green, short int blue) {
     int low_blue = blue & 0b000011;
     
     sendCommand(write);
-    sendData(high_red<<6+medium_red<<4+low_red<<2+high_green);
-    sendData(medium_green<<6+low_green<<4+high_blue<<2+medium_blue);
-    sendData(low_blue<<6+high_red<<4+medium_red<<2+low_red);
-    sendData(high_green<<6+medium_green<<4+low_green<<2+high_blue);
-    sendData(medium_blue<<6+low_blue<<4+high_red<<2+medium_red);
-    sendData(low_red<<6+high_green<<4+medium_green<<2+low_green);
-    sendData(high_blue<<6+medium_blue<<4+low_blue<<2+high_red);
-    sendData(medium_red<<6+low_red<<4+high_green<<2+medium_green);
-    sendData(low_green<<6+high_blue<<4+medium_blue<<2+low_blue);
+    sendData((high_red<<6)+(medium_red<<4)+(low_red<<2)+high_green);
+    sendData((medium_green<<6)+(low_green<<4)+(high_blue<<2)+medium_blue);
+    sendData((low_blue<<6)+0b000111);
+//    sendData((low_blue<<6)+(high_red<<4)+(medium_red<<2)+low_red);
+//    sendData((high_green<<6)+(medium_green<<4)+(low_green<<2)+high_blue);
+//    sendData((medium_blue<<6)+(low_blue<<4)+(high_red<<2)+medium_red);
+//    sendData((low_red<<6)+(high_green<<4)+(medium_green<<2)+low_green);
+//    sendData((high_blue<<6)+(medium_blue<<4)+(low_blue<<2)+high_red);
+//    sendData((medium_red<<6)+(low_red<<4)+(high_green<<2)+medium_green);
+//    sendData((low_green<<6)+(high_blue<<4)+(medium_blue<<2)+low_blue);
 
 }

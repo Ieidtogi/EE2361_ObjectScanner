@@ -37,34 +37,15 @@ int main(void) {
     setPos(0, 0, 60, 31);
     sendCommand(0x5C);
     for(int i = 0; i < 999; i++) {
-        sendColor(0,48,0);
+//        sendColor(0,48,0);
+        sendData(0x5C);
     }
 //    sendCommand(0x5D);
     while(1) {
         if(isButtonPressed) {
             //Scan -> Display
-            if (!isButtonPressed) {
-//                setPos(64, 0, 127, 127);
-//                sendCommand(0x5C);
-//                sendData(0x0);
-//                sendData(0x0);
-//                sendCommand(0x5D);
-//                setPos(10, 10, 20, 20);
-//                sendCommand(0x5C);
-//                sendData(0x40);
-//                sendData(0xFF);
-//                sendData(0x04);
-//                setPos(40, 40, 20, 20);
-//                sendCommand(0x5C);
-//                sendData(0x40);
-//                setPos(30, 10, 40, 20);
-//                sendCommand(0x5C);
-//                sendData(0xFF);
-//                sendData(0x0);
-//                sendData(0x0);
-                
-                isButtonPressed = 0;
-            }
+            sendColor(0,0,5);
+
         }
     }
 }
