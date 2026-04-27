@@ -51,17 +51,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=Button.c Main.c
+SOURCEFILES_QUOTED_IF_SPACED=Button.c Main.c oled_lib.c color_sensor_lib.c
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/Button.o ${OBJECTDIR}/Main.o
-POSSIBLE_DEPFILES=${OBJECTDIR}/Button.o.d ${OBJECTDIR}/Main.o.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/Button.o ${OBJECTDIR}/Main.o ${OBJECTDIR}/oled_lib.o ${OBJECTDIR}/color_sensor_lib.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/Button.o.d ${OBJECTDIR}/Main.o.d ${OBJECTDIR}/oled_lib.o.d ${OBJECTDIR}/color_sensor_lib.o.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/Button.o ${OBJECTDIR}/Main.o
+OBJECTFILES=${OBJECTDIR}/Button.o ${OBJECTDIR}/Main.o ${OBJECTDIR}/oled_lib.o ${OBJECTDIR}/color_sensor_lib.o
 
 # Source Files
-SOURCEFILES=Button.c Main.c
+SOURCEFILES=Button.c Main.c oled_lib.c color_sensor_lib.c
 
 
 
@@ -101,6 +101,18 @@ ${OBJECTDIR}/Main.o: Main.c  .generated_files/flags/default/d56482bff6e7f5b8b74a
 	@${RM} ${OBJECTDIR}/Main.o 
 	${MP_CC} $(MP_EXTRA_CC_PRE)  Main.c  -o ${OBJECTDIR}/Main.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MP -MMD -MF "${OBJECTDIR}/Main.o.d"      -g -D__DEBUG     -omf=elf -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp="${DFP_DIR}/xc16"
 	
+${OBJECTDIR}/oled_lib.o: oled_lib.c  .generated_files/flags/default/ef2b95e0edcefc47d59ec7a9d287e655d5ec6484 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/oled_lib.o.d 
+	@${RM} ${OBJECTDIR}/oled_lib.o 
+	${MP_CC} $(MP_EXTRA_CC_PRE)  oled_lib.c  -o ${OBJECTDIR}/oled_lib.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MP -MMD -MF "${OBJECTDIR}/oled_lib.o.d"      -g -D__DEBUG     -omf=elf -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp="${DFP_DIR}/xc16"
+	
+${OBJECTDIR}/color_sensor_lib.o: color_sensor_lib.c  .generated_files/flags/default/137ca4b42e6d8c094f0b846a046354343289c4bf .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/color_sensor_lib.o.d 
+	@${RM} ${OBJECTDIR}/color_sensor_lib.o 
+	${MP_CC} $(MP_EXTRA_CC_PRE)  color_sensor_lib.c  -o ${OBJECTDIR}/color_sensor_lib.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MP -MMD -MF "${OBJECTDIR}/color_sensor_lib.o.d"      -g -D__DEBUG     -omf=elf -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp="${DFP_DIR}/xc16"
+	
 else
 ${OBJECTDIR}/Button.o: Button.c  .generated_files/flags/default/5ccbb119cfe2d0f1c087682bdc4086f8c58f7aa8 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
@@ -113,6 +125,18 @@ ${OBJECTDIR}/Main.o: Main.c  .generated_files/flags/default/7e0147f71de529784f92
 	@${RM} ${OBJECTDIR}/Main.o.d 
 	@${RM} ${OBJECTDIR}/Main.o 
 	${MP_CC} $(MP_EXTRA_CC_PRE)  Main.c  -o ${OBJECTDIR}/Main.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MP -MMD -MF "${OBJECTDIR}/Main.o.d"        -g -omf=elf -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp="${DFP_DIR}/xc16"
+	
+${OBJECTDIR}/oled_lib.o: oled_lib.c  .generated_files/flags/default/b1a7d74585a39ecdb377f0bd8aa1a92fcfb5e899 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/oled_lib.o.d 
+	@${RM} ${OBJECTDIR}/oled_lib.o 
+	${MP_CC} $(MP_EXTRA_CC_PRE)  oled_lib.c  -o ${OBJECTDIR}/oled_lib.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MP -MMD -MF "${OBJECTDIR}/oled_lib.o.d"        -g -omf=elf -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp="${DFP_DIR}/xc16"
+	
+${OBJECTDIR}/color_sensor_lib.o: color_sensor_lib.c  .generated_files/flags/default/fe7874445fb4034bdd44f1ca8c53da274bcab664 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/color_sensor_lib.o.d 
+	@${RM} ${OBJECTDIR}/color_sensor_lib.o 
+	${MP_CC} $(MP_EXTRA_CC_PRE)  color_sensor_lib.c  -o ${OBJECTDIR}/color_sensor_lib.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MP -MMD -MF "${OBJECTDIR}/color_sensor_lib.o.d"        -g -omf=elf -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp="${DFP_DIR}/xc16"
 	
 endif
 

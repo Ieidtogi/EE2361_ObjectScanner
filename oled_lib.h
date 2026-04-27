@@ -12,11 +12,10 @@
 extern "C" {
 #endif
     void sendColor(short int red, short int green, short int blue);
-    void sendData(int data);
+    void sendData(short int data);
     void sendCommand(short int cmd);
     void setPos(short int xStart, short int yStart, short int xEnd, short int yEnd);
     void spi_init(void);
-    void fillPixel(short int red, short int green, short int blue, int x, int y);
 #ifdef	__cplusplus
 }
 #endif

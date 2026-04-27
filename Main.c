@@ -9,6 +9,7 @@
 #include "xc.h"
 #include "Button.h"
 #include "oled_lib.h"
+#include "color_sensor_lib.h"
 
 // CW1: FLASH CONFIGURATION WORD 1 (see PIC24 Family Reference Manual 24.1)
 #pragma config ICS = PGx1          // Comm Channel Select (Emulator EMUC1/EMUD1 pins are shared with PGC1/PGD1)
@@ -29,24 +30,43 @@ void setup(void) {
 }
 
 int main(void) {
+    
     setup();
+    Color_Init();
+    Delayms(5); 
+
     initButton();
+    
     spi_init();
-    int red=0;
-    int green=0;
-    int blue=0;
+    for (int i = 0; i < 6000; i++);
+    sendCommand(0xA6);
+    setPos(0, 0, 60, 31);
+    sendCommand(0x5C);
+    for(int i = 0; i < 9999; i++) {
+//        sendColor(0,48,0);
+        sendData(0x5C);
+    }
+//    sendCommand(0x5D);
+    sendCommand(0x5C);
     while(1) {
         if(isButtonPressed) {
             //Scan -> Display
-            red = (red++)%60;
+//            sendData(0x0C);
+            sendColor(0,0,5);
             
-        } 
-        else {
-            for (int i = 0; i < 16;i++) {
-                for (int j = 0; j < 16; j++) {
-                    fillPixel(red,i,j,i,j);
-                }
-            }
+            I2C1CONbits.SEN = 1;
+            while(_SEN); //wait for startup to complete
+
+            PrintFrame(address<<1);
+
+            I2C1CONbits.PEN = 1;
+            while (_PEN); //wait for shutdown to complete
+
+            // int clear = Color_Read(0x14); //reads clear data
+            Delayms(5);
+        }
+        if(!isButtonPressed) {
+            sendColor(0,5,0);
         }
     }
 }

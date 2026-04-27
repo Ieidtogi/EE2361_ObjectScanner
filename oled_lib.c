@@ -1,4 +1,3 @@
-
 /*
  * File:   oled_main.c
  * Author: djlep
@@ -85,9 +84,8 @@ void spi_init(void)
     
     int temp;
     // turn on the OLED
-    sendCommand(0xA6); // set display to regular grayscale
     sendCommand(0xAF);
-
+    sendCommand(0xA5); // set display to regular grayscale
 }
 
 void setPos(short int xStart, short int yStart, short int xEnd, short int yEnd) {
@@ -108,22 +106,13 @@ void sendCommand(short int cmd) {
     _SPI1IF = 0;
 }
 
-void sendData(int data) {
+void sendData(short int data) {
     int temp;
     _LATA3 = 1;
     SPI1BUF = data;
     while (!_SPI1IF);
     temp = SPI1BUF;
     _SPI1IF = 0;
-}
-
-void fillPixel(short int red, short int green, short int blue, int x, int y) {
-    
-    setPos(x*8,y*8,x*8+7,y*8+7);
-    
-    for(int i = 0; i < 8*8; i++) {
-        sendColor(red,green,blue);
-    }
 }
 
 // Sends 4 pixels of the given color
@@ -142,8 +131,15 @@ void sendColor(short int red, short int green, short int blue) {
     int low_blue = blue & 0b000011;
     
     sendCommand(write);
-    sendData((high_blue<<6)+(medium_blue<<4)+(low_blue<<2)+high_green);
-    sendData((medium_green<<6)+(low_green<<4)+(high_red<<2)+medium_red);
-    sendData((low_red<<6)+0b111);
+    sendData((high_red<<6)+(medium_red<<4)+(low_red<<2)+high_green);
+    sendData((medium_green<<6)+(low_green<<4)+(high_blue<<2)+medium_blue);
+//    sendData((low_blue<<6)+0b111);
+    sendData((low_blue<<6)+(high_red<<4)+(medium_red<<2)+low_red);
+    sendData((high_green<<6)+(medium_green<<4)+(low_green<<2)+high_blue);
+    sendData((medium_blue<<6)+(low_blue<<4)+(high_red<<2)+medium_red);
+    sendData((low_red<<6)+(high_green<<4)+(medium_green<<2)+low_green);
+    sendData((high_blue<<6)+(medium_blue<<4)+(low_blue<<2)+high_red);
+    sendData((medium_red<<6)+(low_red<<4)+(high_green<<2)+medium_green);
+    sendData((low_green<<6)+(high_blue<<4)+(medium_blue<<2)+low_blue);
 
 }
