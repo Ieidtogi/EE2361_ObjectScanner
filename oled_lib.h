@@ -21,4 +21,3 @@ extern "C" {
 #endif
 
 #endif	/* OLED_LIB_H */
-
