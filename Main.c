@@ -38,35 +38,20 @@ int main(void) {
     initButton();
     
     spi_init();
-    for (int i = 0; i < 6000; i++);
-    sendCommand(0xA6);
-    setPos(0, 0, 60, 31);
-    sendCommand(0x5C);
-    for(int i = 0; i < 9999; i++) {
-//        sendColor(0,48,0);
-        sendData(0x5C);
-    }
-//    sendCommand(0x5D);
-    sendCommand(0x5C);
+    int red=0;
+    int green=0;
+    int blue=0;
+    
     while(1) {
         if(isButtonPressed) {
-            //Scan -> Display
-//            sendData(0x0C);
-            sendColor(0,0,5);
-            
-            I2C1CONbits.SEN = 1;
-            while(_SEN); //wait for startup to complete
-
-            PrintFrame(address<<1);
-
-            I2C1CONbits.PEN = 1;
-            while (_PEN); //wait for shutdown to complete
-
-            // int clear = Color_Read(0x14); //reads clear data
-            Delayms(5);
+            red = (red++)%60;
         }
-        if(!isButtonPressed) {
-            sendColor(0,5,0);
+        else {
+            for(int i = 0; i < 16; i++) {
+                for (int j = 0; j < 16; j++) {
+                    fillPixel(red,i,j,i,j);
+                }
+            }
         }
     }
 }
