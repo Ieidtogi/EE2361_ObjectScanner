@@ -42,15 +42,21 @@ int main(void) {
         
         if(isButtonPressed) {
             //Scan -> Display
-            for (int i = 0; i < 16;i++) {
-                for (int j = 0; j < 16; j++) {
+          short int clearRead = Color_Read(clearReg); //reads clear data
+          Delayms(5);
+          short int redRead = Color_Read(redReg); //reads red data
+          Delayms(5);
+          short int greenRead = Color_Read(blueReg); //reads green data
+          Delayms(5);
+          short int blueRead = Color_Read(greenReg); //reads blue data
+          Delayms(25);
+          for (int i = 0; i < 16;i++) {
+            for (int j = 0; j < 16; j++) {
                     fillPixel(i+j,i,j,i,j);
-                }
             }
-            
+          }  
         } 
-        else {
-            
+        else {            
         }
     }
 }
