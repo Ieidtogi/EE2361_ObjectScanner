@@ -38,11 +38,28 @@ int main(void) {
     int blue=0;
     sendCommand(0xAF);
     sendCommand(0xA6);
+    ;
+    ;
+    ;
     while(1) {
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                fillPixel(i, i, j, i, j);
+        
+        if(isButtonPressed) {
+            //Scan -> Display
+          short int clearRead = Color_Read(clearReg); //reads clear data
+          Delayms(5);
+          short int redRead = Color_Read(redReg); //reads red data
+          Delayms(5);
+          short int greenRead = Color_Read(blueReg); //reads green data
+          Delayms(5);
+          short int blueRead = Color_Read(greenReg); //reads blue data
+          Delayms(25);
+          for (int i = 0; i < 16;i++) {
+            for (int j = 0; j < 16; j++) {
+                    fillPixel(i+j,i,j,i,j);
             }
+          }  
+        } 
+        else {            
         }
         sendCommand(0xA5);
         for(int i = 0; i < 32768;i++);
