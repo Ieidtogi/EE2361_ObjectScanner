@@ -38,6 +38,9 @@ int main(void) {
     int blue=0;
     sendCommand(0xAF);
     sendCommand(0xA6);
+    ;
+    ;
+    ;
     while(1) {
         
         if(isButtonPressed) {
