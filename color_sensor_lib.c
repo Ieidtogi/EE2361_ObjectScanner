@@ -12,10 +12,8 @@ void Color_Init(void) {
     //BP configuration
     CLKDIVbits.RCDIV = 0;  //Set RCDIV=1:1 (default 2:1) 32MHz or FCY/2=16M
     AD1PCFG = 0x9fff;            //sets all pins to digital I/O
-    TRISA = 0b0000000000011111;  //set port A to inputs, 
-    TRISB = 0b0000000000000011;  //and port B to outputs
-    LATA = 0xffff;               //Set all of port A to HIGH
-    LATB = 0xffff;               //and all of port B to HIGH
+    TRISBbits.TRISB8 = 1;
+    TRISBbits.TRISB8 = 1;
     
     //I2C1 initialization
     I2C1CON = 0; //disable and reset control register
@@ -61,13 +59,12 @@ int Color_Read(char regAddress) {
     I2C1CONbits.SEN = 1; //repeated start condition
     while(_SEN); //wait for startup to complete
     PrintFrame(address<<1 | 1); //re-address with R/nW = 1
-    colorVal = GetByte(lowerByte); //add lower byte
-    colorVal += GetByte(upperByte)<<8; //add upper byte
+    colorVal = GetByte(); //add lower byte
+//    colorVal += GetByte()<<8; //add upper byte
     
     I2C1CONbits.PEN = 1;
     while (_PEN); //wait for shutdown to complete
     
-    colorVal = (colorVal>>2) & 0b111111; //truncates value to 6 bits
     return(colorVal);
 }
 
@@ -77,22 +74,12 @@ void PrintFrame(char byte) {
     while ((!_MI2C1IF) & _TRSTAT & (!_ACKSTAT)); //waits for transmission to finish 
 }
 
-char GetByte(int byte){
+char GetByte(void){
     _RCEN = 1; //activate receive mode
+//    while(!_RBF);
     while(!_RBF & _RCEN); //wait for receive to complete
-    
-    if(byte == lowerByte) { //sends ACK to continue transmission for upper byte
-        _ACKEN = 1; //send acknowledge bit
-        while(_ACKEN); 
-    }
-    
-    else if(byte == upperByte) { //sends NACK to end receive transmission
-        _ACKDT = 1; //sets acknowledge to NACK
-        _ACKEN = 1; //send acknowledge bit
-        while(_ACKEN); 
-        _ACKDT = 0; //sets acknowledge back to ACK
-    }
-    
+    _ACKEN = 1; //send acknowledge bit
+//    while(_ACKEN);
     return(I2C1RCV);
 }
 
@@ -103,8 +90,3 @@ void Delayms(int time) {
         }
     }
 }
-
-//long int GetRGB(void) { 
-//    long int colorVal = (Color_Read(0x16)>>6) & 0b111111;
-////    colorVal +=
-//}
