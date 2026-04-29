@@ -34,3 +34,4 @@ extern "C" {
 #endif
 
 #endif	/* COLOR_SENSOR_LIB_H */
+

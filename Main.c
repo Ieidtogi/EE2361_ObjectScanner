@@ -29,9 +29,9 @@ void setup(void) {
 }
 
 int main(void) {
-    setup();
-    Color_Init();
-    initButton();
+//    setup();
+//    Color_Init();
+//    initButton();
     spi_init();
     int red=0;
     int green=0;
@@ -39,18 +39,21 @@ int main(void) {
     sendCommand(0xAF);
     sendCommand(0xA6);
     while(1) {
-        
-        if(isButtonPressed) {
-            //Scan -> Display
-            for (int i = 0; i < 16;i++) {
-                for (int j = 0; j < 16; j++) {
-                    fillPixel(i+j,i,j,i,j);
-                }
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                fillPixel(i, i, j, i, j);
             }
-            
-        } 
-        else {
-            
         }
+        sendCommand(0xA5);
+        for(int i = 0; i < 32768;i++);
+        sendCommand(0xA6);
+//        if(isButtonPressed) {
+//            //Scan -> Display
+//            
+//            
+//        } 
+//        else {
+//            sendCommand(0x5D);
+//        }
     }
 }

@@ -65,10 +65,11 @@ void spi_init(void)
     // SPI1CON1bits.PPRE = 0b01;  // primary prescaler = 16;
     SPI1CON2 = 0;
     SPI1STAT = 0;
+    SPI1STATbits.SPIROV = 0;
     SPI1STATbits.SISEL = 0b101; // IF set when last bit is shifted out
                                 // That means the SPI xfer is complete.
     SPI1STATbits.SPIEN = 1;
-
+    
 
 //    IFS0bits.T2IF = 0;
 //    TMR2 = 0;
@@ -90,8 +91,8 @@ void spi_init(void)
         }
     }
     
-    int temp;
     // turn on the OLED
+    int temp = SPI1BUF;
     sendCommand(0xA6); // set display to regular grayscale
     sendCommand(0xAF); // turn off sleep mode
 
@@ -108,6 +109,7 @@ void setPos(short int xStart, short int yStart, short int xEnd, short int yEnd) 
 
 void sendCommand(short int cmd) {
     int temp;
+    _SPIROV = 0;
     _LATA3 = 0;
     SPI1BUF = cmd;
     while (!_SPI1IF);
@@ -115,8 +117,9 @@ void sendCommand(short int cmd) {
     _SPI1IF = 0;
 }
 
-void sendData(int data) {
+void sendData(short int data) {
     int temp;
+    _SPIROV = 0;
     _LATA3 = 1;
     SPI1BUF = data;
     while (!_SPI1IF);
