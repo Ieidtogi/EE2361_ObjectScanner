@@ -11,6 +11,7 @@
 #include "oled_lib.h"
 
 #define write 0x5C
+#define y_offset 6*16
 
 //volatile unsigned short int sample = DACBITS;
 
@@ -132,7 +133,7 @@ void sendData(short int data) {
 
 void fillPixel(short int red, short int green, short int blue, int x, int y) {
     
-    setPos(x*16,y*16,x*16+15,y*16+15);
+    setPos(x*16,(y*16+y_offset)%128,x*16+15,(y*16+15+y_offset)%128);
     
     for(int i = 0; i < 16*16; i++) {
         sendColor(red,green,blue);
