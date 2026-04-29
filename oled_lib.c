@@ -93,6 +93,9 @@ void spi_init(void)
     
     // turn on the OLED
     int temp = SPI1BUF;
+    sendCommand(0xFD); // Command lock or unlock command
+    sendCommand(0x12); // unlock command
+    
     sendCommand(0xA6); // set display to regular grayscale
     sendCommand(0xAF); // turn off sleep mode
 
@@ -161,7 +164,7 @@ void sendColor(short int red, short int green, short int blue) {
 void fillScreen(short int red, short int green, short int blue, float** distances) {
     for (int i = 0; i < 8; i++) {
         for(int j = 0; j < 8; j++) {
-            fillPixel((int)(red*distances[i][j]),(int)(green*distances[i][j]),(int)(blue*distances[i][j],i,j));
+            fillPixel((int)(red*distances[i][j]),(int)(green*distances[i][j]),(int)(blue*distances[i][j]),i,j);
         }
     }
 }
