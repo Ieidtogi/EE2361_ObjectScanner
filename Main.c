@@ -31,7 +31,7 @@ buffer_t* myBuf;
 void setup(void) {
     //setup stuff
     myBuf = buffer_init();
-    i2c1_init(&myBuf);
+    i2c1_init(myBuf);
 }
 
 int main(void) {
@@ -79,6 +79,14 @@ int main(void) {
         sendCommand(0xA6);
 
         for(int i = 0; i < 16000;i++);
+        
+        for(int i = 0; i < 1000; i++) {
+            for(int j = 0; j < 32000; j++) {
+                asm("NOP");
+            }
+        }
+        
+        data_conversion(myBuf);
 
 //        if(isButtonPressed) {
 //            //Scan -> Display

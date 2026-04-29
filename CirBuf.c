@@ -5,7 +5,70 @@
  * Created on April 8, 2026, 12:29 PM
  */
 
+#include "xc.h"
 #include "CirBuf.h"
+
+uint16_t results[8][8];
+float nor_results[8][8];
+
+uint16_t max = 0;
+uint16_t min;
+
+uint8_t flag = 0;
+
+void data_conversion(buffer_t *f) {
+    _SI2C1IE = 0;   // We don't want this to be interrupted by new data input.
+    
+    for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+            uint16_t temp = (buffer_pop(f) << 8) | (buffer_pop(f));
+            results[i][j] = temp;
+        }
+    }
+    
+    data_normalization();
+    
+    _SI2C1IF = 0;
+    _SI2C1IE = 1;
+}
+
+void data_normalization(void) {
+    _SI2C1IE = 0;   // We don't want this to be interrupted by new data input.
+    
+    for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+            if(!flag) {
+                min = results[0][0];
+                flag = 1;
+            }
+            
+            uint16_t temp = results[i][j];
+                    
+            if (temp > max) {
+                max = temp;
+            } else if (temp < min) {
+                min = temp;
+            }
+        }
+    }
+    
+    if (max == min) {
+        return;
+    }
+    
+    float coeff = 1.0f / (max - min);
+    
+    for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+            nor_results[i][j] = (float)((results[i][j] - min) * coeff);
+        }
+    }
+    
+    flag = 0;
+    
+    _SI2C1IF = 0;
+    _SI2C1IE = 1;
+}
 
 /* Struct Helper Function */
 

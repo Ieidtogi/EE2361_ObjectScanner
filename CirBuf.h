@@ -19,6 +19,9 @@ extern "C" {
     #define BUFFER_SIZE 128
     #define BUFFER_MASK (BUFFER_SIZE - 1)
 
+    extern uint16_t results[8][8];
+    extern float nor_results[8][8];
+
     /* Buffer Struct */
     typedef struct buffer_t {
         uint8_t buffer[BUFFER_SIZE];
@@ -27,6 +30,10 @@ extern "C" {
     } buffer_t;
 
     /* Function Prototypes */
+    
+    void data_conversion(buffer_t *f);
+    void data_normalization(void);
+    
     struct buffer_t* buffer_init(void);
     int buffer_push(buffer_t *f, uint8_t data);
     int buffer_force_push(buffer_t *f, uint8_t data);

@@ -206,11 +206,19 @@ void __attribute__((interrupt, auto_psv)) _SI2C1Interrupt(void) {
     
     _SI2C1IF = 0;
     
-    if (I2C1STATbits.R_W == 0 && I2C1STATbits.D_A == 1) {	// Data byte received
-        temp = I2C1RCV;
-        buffer_force_push(rx_buffer, temp);         // Store in circular buffer
-    } else {
-        temp = I2C1RCV;								// Dummy read for address match
+    if (I2C1STATbits.R_W == 0) {
+        
+        if (I2C1STATbits.D_A == 1) {
+            // CASE: DATA BYTE RECEIVED
+            temp = I2C1RCV;
+            buffer_force_push(rx_buffer, temp);
+        } else {
+            // CASE: ADDRESS MATCH
+            temp = I2C1RCV; 
+        }
+
+        // Release the clock so the Master can send the next byte
+        I2C1CONbits.SCLREL = 1;
     }
 }
 

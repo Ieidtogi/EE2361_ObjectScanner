@@ -157,5 +157,4 @@ void sendColor(short int red, short int green, short int blue) {
     sendData((high_blue<<6)+(medium_blue<<4)+(low_blue<<2)+high_green);
     sendData((medium_green<<6)+(low_green<<4)+(high_red<<2)+medium_red);
     sendData((low_red<<6)+0b111);
-
 }
