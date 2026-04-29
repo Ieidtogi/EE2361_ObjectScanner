@@ -7,6 +7,8 @@
 
 
 #include "xc.h"
+#include "CirBuf.h"
+#include "I2CLib.h"
 #include "Button.h"
 #include "oled_lib.h"
 
@@ -24,46 +26,60 @@
                                        // Fail-Safe Clock Monitor is enabled)
 #pragma config FNOSC = FRCPLL      // Oscillator Select (Fast RC Oscillator with PLL module (FRCPLL))
 
+buffer_t* myBuf;
+
 void setup(void) {
     //setup stuff
+    myBuf = buffer_init();
+    i2c1_init(&myBuf);
 }
 
 int main(void) {
-//    setup();
+    setup();
 //    Color_Init();
 //    initButton();
     spi_init();
+    
     int red=0;
     int green=0;
     int blue=0;
+    
     sendCommand(0xAF);
     sendCommand(0xA6);
-    ;
-    ;
-    ;
+
     while(1) {
         
-        if(isButtonPressed) {
-            //Scan -> Display
-          short int clearRead = Color_Read(clearReg); //reads clear data
-          Delayms(5);
-          short int redRead = Color_Read(redReg); //reads red data
-          Delayms(5);
-          short int greenRead = Color_Read(blueReg); //reads green data
-          Delayms(5);
-          short int blueRead = Color_Read(greenReg); //reads blue data
-          Delayms(25);
-          for (int i = 0; i < 16;i++) {
-            for (int j = 0; j < 16; j++) {
-                    fillPixel(i+j,i,j,i,j);
+//        if(isButtonPressed) {
+//            // Scan -> Display
+//          short int clearRead = Color_Read(clearReg); // reads clear data
+//          Delayms(5);
+//          short int redRead = Color_Read(redReg); // reads red data
+//          Delayms(5);
+//          short int greenRead = Color_Read(blueReg); // reads green data
+//          Delayms(5);
+//          short int blueRead = Color_Read(greenReg); // reads blue data
+//          Delayms(25);
+//        } 
+//        else {  
+//
+//        }
+        
+        for (int i = 0; i < 8;i++) {
+            for (int j = 0; j < 8; j++) {
+                fillPixel(i+j,i,j,i,j);
             }
-          }  
-        } 
-        else {            
-        }
+        }  
+
+        for(int i = 0; i < 16000;i++);
+        
         sendCommand(0xA5);
-        for(int i = 0; i < 32768;i++);
+
+        for(int i = 0; i < 16000;i++);
+
         sendCommand(0xA6);
+
+        for(int i = 0; i < 16000;i++);
+
 //        if(isButtonPressed) {
 //            //Scan -> Display
 //            

@@ -108,20 +108,22 @@ void setPos(short int xStart, short int yStart, short int xEnd, short int yEnd) 
 }
 
 void sendCommand(short int cmd) {
-    int temp;
+    short int temp;
     _SPIROV = 0;
     _LATA3 = 0;
     SPI1BUF = cmd;
+    
     while (!_SPI1IF);
     temp = SPI1BUF;
     _SPI1IF = 0;
 }
 
-void sendData(short int data) {
-    int temp;
+void sendData(short int data) { 
+    short int temp;
     _SPIROV = 0;
     _LATA3 = 1;
     SPI1BUF = data;
+    
     while (!_SPI1IF);
     temp = SPI1BUF;
     _SPI1IF = 0;

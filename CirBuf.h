@@ -21,15 +21,15 @@ extern "C" {
 
     /* Buffer Struct */
     typedef struct buffer_t {
-        uint16_t buffer[BUFFER_SIZE];
-        volatile uint16_t head;
-        volatile uint16_t tail;
+        uint8_t buffer[BUFFER_SIZE];
+        volatile uint8_t head;
+        volatile uint8_t tail;
     } buffer_t;
 
     /* Function Prototypes */
     struct buffer_t* buffer_init(void);
-    int buffer_push(buffer_t *f, uint16_t data);
-    int buffer_force_push(buffer_t *f, uint16_t data);
+    int buffer_push(buffer_t *f, uint8_t data);
+    int buffer_force_push(buffer_t *f, uint8_t data);
     int buffer_pop(buffer_t *f);
     int buffer_is_empty(buffer_t *f);
     double buffer_average(buffer_t *f);

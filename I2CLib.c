@@ -9,7 +9,7 @@
 #include "I2CLib.h"
 
 volatile I2C_STATE_t i2c_state = I2C_IDLE;
-buffer_t *rx_buffer; 		// Pointer to the circular buffer
+buffer_t* rx_buffer; 		// Pointer to the circular buffer
 
 volatile uint8_t i2c_addr;
 volatile uint16_t reg_addr;
@@ -24,7 +24,7 @@ static uint8_t is_read;
 
 volatile uint8_t i2c_busy = 0;
 
-void i2c1_init(buffer_t *rxBuf) {
+void i2c1_init(buffer_t* rxBuf) {
 	// I2C Configuration
 	I2C1CON = 0;
 	I2C1TRN = 0;
@@ -208,7 +208,7 @@ void __attribute__((interrupt, auto_psv)) _SI2C1Interrupt(void) {
     
     if (I2C1STATbits.R_W == 0 && I2C1STATbits.D_A == 1) {	// Data byte received
         temp = I2C1RCV;
-        buffer_force_push(rx_buffer, temp);		// Store in circular buffer
+        buffer_force_push(rx_buffer, temp);         // Store in circular buffer
     } else {
         temp = I2C1RCV;								// Dummy read for address match
     }

@@ -11,12 +11,16 @@
 
 struct buffer_t* buffer_init(void) {
     struct buffer_t* f = malloc(sizeof(struct buffer_t));
-    f->head = 0;
-    f->tail = 0;
+    
+    if (f != NULL) {
+        f->head = 0;
+        f->tail = 0;
+    }
+    
     return f;
 }
 
-int buffer_push(buffer_t *f, uint16_t data) {
+int buffer_push(buffer_t *f, uint8_t data) {
     uint16_t next = (f->tail + 1) & BUFFER_MASK;
 
     if (next == f->head) {
@@ -28,7 +32,7 @@ int buffer_push(buffer_t *f, uint16_t data) {
     return 1;       // Buffer Push Success
 }
 
-int buffer_force_push(buffer_t *f, uint16_t data) {
+int buffer_force_push(buffer_t *f, uint8_t data) {
     uint16_t next = (f->tail + 1) & BUFFER_MASK;
     
     if (next == f->head) {

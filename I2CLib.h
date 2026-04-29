@@ -33,7 +33,7 @@ extern "C" {
 	} I2C_STATE_t;
 
 	extern volatile uint8_t i2c_busy;
-	extern buffer_t *rx_buffer;
+	extern buffer_t* rx_buffer;
 
 	/* I2C Function Prototype */
 	void i2c1_init(buffer_t *rxBuf);
