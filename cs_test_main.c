@@ -7,6 +7,7 @@
 
 #include "xc.h"
 #include "color_sensor_lib.h"
+#include "oled_lib.h"
 
 // CW1: FLASH CONFIGURATION WORD 1 (see PIC24 Family Reference Manual 24.1)
 #pragma config ICS = PGx1          // Comm Channel Select (Emulator EMUC1/EMUD1 pins are shared with PGC1/PGD1)
@@ -28,35 +29,26 @@ void InitADC(void);
 int main(void) {
     Color_Init();
     Delayms(5); 
-    while(1) {    
+    
+    spi_init();
+    
+    while(1) {
         
-        I2C1CONbits.SEN = 1;
-        while(_SEN); //wait for startup to complete
-        
-        PrintFrame(address<<1 |1);
-        
-        I2C1CONbits.PEN = 1;
-        while (_PEN); //wait for shutdown to complete
-        
-        LATBbits.LATB8 = 1;
-        LATBbits.LATB9 = 1;
-        
+        short int clearRead = Color_Read(clear); //reads clear data
         Delayms(5);
-        
-        LATBbits.LATB8 = 0;
-        LATBbits.LATB9 = 0;
-        
-        // int clear = Color_Read(0x14); //reads clear data
+        short int redRead = Color_Read(red); //reads red data
         Delayms(5);
-//        int red = Color_Read(0x16); //reads clear data
-//        Delayms(5);
-//        int green = Color_Read(0x18); //reads clear data
-//        Delayms(5);
-//        int blue = Color_Read(0x1A); //reads clear data
-//        Delayms(5);
+        short int greenRead = Color_Read(blue); //reads green data
+        Delayms(5);
+        short int blueRead = Color_Read(green); //reads blue data
+        Delayms(25);
         
-//        char value = color & 0xff;
-//        PrintFrame(value);
-//        Delayms(1);
+        for(int i = 0; i < 16; i++) {
+            for (int j = 0; j < 16; j++) {
+                //fillPixel(redRead,greenRead,blueRead,i,j);
+                fillPixel(i+j,i,j,i,j);
+            }
+        }
+        sendCommand(0xAF);
     }
 }
