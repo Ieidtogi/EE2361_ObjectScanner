@@ -1,13 +1,3 @@
-/*
- * File:   oled_main.c
- * Author: djlep
- *
- * Created on April 15, 2026, 6:52 PM
- */
-#include <p24Fxxxx.h>
-#include <xc.h>
-#include <stdlib.h>
-#include "oled_lib.h"
 
 /*
  * File:   oled_main.c
@@ -45,7 +35,7 @@ void spi_init(void)
     AD1PCFG = 0x9fff;  // For digital I/O.  If you want to use analog, you'll
                        // need to change this.
 //    TRISB = 0;    // make all PORTBbits outputs initially
-
+    
     // add your configuration commands below
     TRISBbits.TRISB4 = 0; // SCK
     TRISBbits.TRISB5 = 0; // SDO
@@ -64,14 +54,14 @@ void spi_init(void)
     RPOR2bits.RP5R = 7;   //RB5->SPI1:SDO1; See Table 10-3 on P109 of the datasheet
     RPOR2bits.RP4R = 8;   //RB4->SPI1:SCK1OUT;
     __builtin_write_OSCCONL(OSCCON | 0x40); // lock   PPS
-
+    
     SPI1CON1 = 0;
     SPI1CON1bits.MSTEN = 1;  // master mode
     SPI1CON1bits.MODE16 = 0; // 8 bits
     SPI1CON1bits.CKE = 1;
     SPI1CON1bits.CKP = 0;
     SPI1CON1bits.SPRE = 0b0; // secondary prescaler = 8 
-    SPI1CON1bits.PPRE = 0b0;  // primary prescaler = 64;
+    SPI1CON1bits.PPRE = 0b01;  // primary prescaler = 64;
     // SPI1CON1bits.PPRE = 0b01;  // primary prescaler = 16;
     SPI1CON2 = 0;
     SPI1STAT = 0;
@@ -92,11 +82,18 @@ void spi_init(void)
     _TRISA4 = 1;
     for (int i = 0; i<100;i++);
     _TRISA4 = 0;
-
+    
+    for(int i = 0; i<170; i++){
+        for(int j =0; j<170;j++){
+            for(int k = 0; k<171;k++){
+            }
+        }
+    }
+    
     int temp;
     // turn on the OLED
     sendCommand(0xA6); // set display to regular grayscale
-    sendCommand(0xAF);
+    sendCommand(0xAF); // turn off sleep mode
 
 }
 
@@ -129,30 +126,31 @@ void sendData(int data) {
 
 void fillPixel(short int red, short int green, short int blue, int x, int y) {
     
-    setPos(x*8,y*8,x*8+7,y*8+7);
+    setPos(x*16,y*16,x*16+15,y*16+15);
     
-    for(int i = 0; i < 8*8; i++) {
+    for(int i = 0; i < 16*16; i++) {
         sendColor(red,green,blue);
     }
 }
 
 // Sends 4 pixels of the given color
 void sendColor(short int red, short int green, short int blue) {
-
+    
     int high_red = red >> 4;
     int medium_red = (red & 0b001100) >> 2;
     int low_red = red & 0b000011;
-
+    
     int high_green = green >> 4;
     int medium_green = (green & 0b001100) >> 2;
     int low_green = green & 0b000011;
-
+    
     int high_blue = blue >> 4;
     int medium_blue = (blue & 0b001100) >> 2;
     int low_blue = blue & 0b000011;
-
+    
     sendCommand(write);
     sendData((high_blue<<6)+(medium_blue<<4)+(low_blue<<2)+high_green);
     sendData((medium_green<<6)+(low_green<<4)+(high_red<<2)+medium_red);
     sendData((low_red<<6)+0b111);
+
 }
