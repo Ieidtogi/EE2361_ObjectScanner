@@ -29,9 +29,9 @@ void setup(void) {
 }
 
 int main(void) {
-    setup();
-    Color_Init();
-    initButton();
+//    setup();
+//    Color_Init();
+//    initButton();
     spi_init();
     int red=0;
     int green=0;
@@ -61,5 +61,16 @@ int main(void) {
         } 
         else {            
         }
+        sendCommand(0xA5);
+        for(int i = 0; i < 32768;i++);
+        sendCommand(0xA6);
+//        if(isButtonPressed) {
+//            //Scan -> Display
+//            
+//            
+//        } 
+//        else {
+//            sendCommand(0x5D);
+//        }
     }
 }
