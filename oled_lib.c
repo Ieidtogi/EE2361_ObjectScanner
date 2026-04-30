@@ -115,8 +115,12 @@ void sendCommand(short int cmd) {
     short int temp;
     _SPIROV = 0;
     _LATA3 = 0;
+    
+    while (SPI1STATbits.SPITBF);
+    
     SPI1BUF = cmd;
     
+    while (!SPI1STATbits.SPIRBF);
     while (!_SPI1IF);
     temp = SPI1BUF;
     _SPI1IF = 0;
@@ -126,8 +130,12 @@ void sendData(short int data) {
     short int temp;
     _SPIROV = 0;
     _LATA3 = 1;
+    
+    while (SPI1STATbits.SPITBF);
+    
     SPI1BUF = data;
     
+    while (!SPI1STATbits.SPIRBF);
     while (!_SPI1IF);
     temp = SPI1BUF;
     _SPI1IF = 0;
@@ -164,10 +172,14 @@ void sendColor(short int red, short int green, short int blue) {
 
 }
 
-void fillScreen(short int red, short int green, short int blue, float** distances) {
+void fillScreen(short int red, short int green, short int blue, float distances[8][8]) {
     for (int i = 0; i < 8; i++) {
         for(int j = 0; j < 8; j++) {
-            fillPixel((int)(red*distances[i][j]),(int)(green*distances[i][j]),(int)(blue*distances[i][j]),i,j);
+            float temp = distances[i][j];
+            int redr = (int)(red * (1.0f - temp));
+            int greenr = (int)(green * (1.0f - temp));
+            int bluer = (int)(blue * (1.0f - temp));
+            fillPixel(redr, greenr, bluer, i, j);
         }
     }
 }

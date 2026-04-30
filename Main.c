@@ -28,6 +28,8 @@
 
 buffer_t* myBuf;
 
+unsigned long int count = 0;
+
 void setup(void) {
     //setup stuff
     myBuf = buffer_init();
@@ -64,29 +66,31 @@ int main(void) {
 //
 //        }
         
-        for (int i = 0; i < 8;i++) {
-            for (int j = 0; j < 8; j++) {
-                fillPixel(i+j,i,j,i,j);
-            }
-        }  
+//        for (int i = 0; i < 8;i++) {
+//            for (int j = 0; j < 8; j++) {
+//                fillPixel(i+j,i,j,i,j);
+//            }
+//        }
 
         for(int i = 0; i < 16000;i++);
-        
-        sendCommand(0xA5);
 
         for(int i = 0; i < 16000;i++);
 
         sendCommand(0xA6);
-
+        
         for(int i = 0; i < 16000;i++);
         
-        for(int i = 0; i < 1000; i++) {
+        for(int i = 0; i < 200; i++) {
             for(int j = 0; j < 32000; j++) {
                 asm("NOP");
             }
         }
         
         data_conversion(myBuf);
+        
+        count++;
+        
+        fillScreen(63,63,63, nor_results);
 
 //        if(isButtonPressed) {
 //            //Scan -> Display
