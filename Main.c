@@ -31,16 +31,24 @@ buffer_t* myBuf;
 unsigned long int count = 0;
 
 void setup(void) {
+    CLKDIVbits.RCDIV = 0;
+    
+    AD1PCFG = 0xffff;       // Set all pins to digital
+    
     //setup stuff
     myBuf = buffer_init();
+    
+    spi_init();
+    
     i2c1_init(myBuf);
+    
+    initButton();
+    
+    Color_Init();
 }
 
 int main(void) {
     setup();
-//    Color_Init();
-//    initButton();
-    spi_init();
     
     int red=0;
     int green=0;

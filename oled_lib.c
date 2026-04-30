@@ -32,9 +32,10 @@
 
 void spi_init(void)
 {
-    CLKDIVbits.RCDIV = 0;
-    AD1PCFG = 0x9fff;  // For digital I/O.  If you want to use analog, you'll
-                       // need to change this.
+//    CLKDIVbits.RCDIV = 0;
+    
+//    AD1PCFG = 0x9fff;  // For digital I/O.  If you want to use analog, you'll
+//                       // need to change this.
 //    TRISB = 0;    // make all PORTBbits outputs initially
     
     // add your configuration commands below
