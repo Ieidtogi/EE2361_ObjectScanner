@@ -11,6 +11,7 @@
 #include "oled_lib.h"
 
 #define write 0x5C
+#define y_offset 6*16
 
 //volatile unsigned short int sample = DACBITS;
 
@@ -93,6 +94,9 @@ void spi_init(void)
     
     // turn on the OLED
     int temp = SPI1BUF;
+    sendCommand(0xFD); // Command lock or unlock command
+    sendCommand(0x12); // unlock command
+    
     sendCommand(0xA6); // set display to regular grayscale
     sendCommand(0xAF); // turn off sleep mode
 
@@ -131,7 +135,7 @@ void sendData(short int data) {
 
 void fillPixel(short int red, short int green, short int blue, int x, int y) {
     
-    setPos(x*16,y*16,x*16+15,y*16+15);
+    setPos(x*16,(y*16+y_offset)%128,x*16+15,(y*16+15+y_offset)%128);
     
     for(int i = 0; i < 16*16; i++) {
         sendColor(red,green,blue);
@@ -157,4 +161,13 @@ void sendColor(short int red, short int green, short int blue) {
     sendData((high_blue<<6)+(medium_blue<<4)+(low_blue<<2)+high_green);
     sendData((medium_green<<6)+(low_green<<4)+(high_red<<2)+medium_red);
     sendData((low_red<<6)+0b111);
+
+}
+
+void fillScreen(short int red, short int green, short int blue, float** distances) {
+    for (int i = 0; i < 8; i++) {
+        for(int j = 0; j < 8; j++) {
+            fillPixel((int)(red*distances[i][j]),(int)(green*distances[i][j]),(int)(blue*distances[i][j]),i,j);
+        }
+    }
 }
