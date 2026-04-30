@@ -7,6 +7,7 @@
 
 #include "xc.h"
 #include "color_sensor_lib.h"
+#include "I2CLib.h"
 
 void Color_Init(void) {
     //BP configuration
@@ -38,29 +39,35 @@ void Color_Init(void) {
 }
 
 void Color_Cmd(char command, char data) {
+    while(i2c_busy);
+    i2c_busy = 1;
     I2C1CONbits.SEN = 1;
     while(_SEN); //wait for startup to complete
     
-    PrintFrame(address<<1); //sensor address with R/nW = 0
+    PrintFrame(CSaddress<<1); //sensor address with R/nW = 0
     PrintFrame(command); 
     PrintFrame(data);
     
     I2C1CONbits.PEN = 1;
     while (_PEN); //wait for shutdown to complete
+    
+    i2c_busy = 0;
 }
 
 int Color_Read(char regAddress) {
+    while(i2c_busy);
+    i2c_busy = 1;
     int colorVal = 0;
-    
+        
     I2C1CONbits.SEN = 1;
     while(_SEN); //wait for startup to complete
 
-    PrintFrame(address<<1); //sensor address with R/nW = 0
+    PrintFrame(CSaddress<<1); //sensor address with R/nW = 0
     PrintFrame(regAddress | 0xA0); //calls specified register with auto-increment
     
     I2C1CONbits.SEN = 1; //repeated start condition
     while(_SEN); //wait for startup to complete
-    PrintFrame(address<<1 | 1); //re-address with R/nW = 1
+    PrintFrame(CSaddress<<1 | 1); //re-address with R/nW = 1
     colorVal = GetByte(lowerByte); //add lower byte
     colorVal += GetByte(upperByte)<<8; //add upper byte
     
@@ -68,6 +75,7 @@ int Color_Read(char regAddress) {
     while (_PEN); //wait for shutdown to complete
     
     colorVal = (colorVal>>2) & 0b111111; //truncates value to 6 bits
+    i2c_busy = 0;
     return(colorVal);
 }
 
@@ -80,10 +88,10 @@ void PrintFrame(char byte) {
 char GetByte(int byte){
     _RCEN = 1; //activate receive mode
     while(!_RBF & _RCEN); //wait for receive to complete
-    
+    int temp = I2C1RCV;
     if(byte == lowerByte) { //sends ACK to continue transmission for upper byte
         _ACKEN = 1; //send acknowledge bit
-        while(_ACKEN); 
+        while(_ACKEN);
     }
     
     else if(byte == upperByte) { //sends NACK to end receive transmission

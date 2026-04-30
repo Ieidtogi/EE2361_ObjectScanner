@@ -7,7 +7,12 @@
 
 #include "xc.h"
 #include "color_sensor_lib.h"
-#include "oled_lib.h"
+//#include "oled_lib.h"
+//#include "Button.h"
+//#include "CirBuf.h"
+//#include "EEPROM.h"
+//#include "I2CLib.h"
+//#include "TOFLib.h"
 
 // CW1: FLASH CONFIGURATION WORD 1 (see PIC24 Family Reference Manual 24.1)
 #pragma config ICS = PGx1          // Comm Channel Select (Emulator EMUC1/EMUD1 pins are shared with PGC1/PGD1)
@@ -24,31 +29,68 @@
                                        // Fail-Safe Clock Monitor is enabled)
 #pragma config FNOSC = FRCPLL      // Oscillator Select (Fast RC Oscillator with PLL module (FRCPLL))
 
-void InitADC(void);
+#define true 1
+#define false 0
+
+struct buffer_t* myRxBuf;
+//struct EEPROM* myEEPROM_1;
+//struct EEPROM* myEEPROM_2;
+
+void setup(void) {
+	CLKDIVbits.RCDIV = 0b000;
+
+	AD1PCFG = 0x9FFF;
+	
+	TRISA = 0x0000;
+	TRISB = 0x0000;
+
+	LATA = 0xffff;
+	LATB = 0xffff;
+	
+//	myRxBuf = buffer_init();
+//	myEEPROM_1 = eeprom_init(0x50);
+//	myEEPROM_2 = eeprom_init(0x51);
+//
+//	// Initializations
+//	i2c1_init(myRxBuf);
+//	tof_init(myEEPROM_1, myEEPROM_2);
+}
 
 int main(void) {
+    //color sensor
     Color_Init();
     Delayms(5); 
     
-    spi_init();
+    //OLED screen
+//    spi_init();
+    
+    //ToF sensor
+//    setup();
+
+//    tof_start();
     
     while(1) {
         
-        short int clearRead = Color_Read(clear); //reads clear data
+//        while(tof_get_data()) {
+//            delay(100);
+//        }
+//        matrix;
+        
+        short int clearRead = Color_Read(clearReg); //reads clear data
         Delayms(5);
-        short int redRead = Color_Read(red); //reads red data
+        short int redRead = Color_Read(redReg); //reads red data
         Delayms(5);
-        short int greenRead = Color_Read(blue); //reads green data
+        short int greenRead = Color_Read(blueReg); //reads green data
         Delayms(5);
-        short int blueRead = Color_Read(green); //reads blue data
+        short int blueRead = Color_Read(greenReg); //reads blue data
         Delayms(25);
         
-        for(int i = 0; i < 16; i++) {
-            for (int j = 0; j < 16; j++) {
-                //fillPixel(redRead,greenRead,blueRead,i,j);
-                fillPixel(i+j,i,j,i,j);
-            }
-        }
-        sendCommand(0xAF);
+//        for(int i = 0; i < 16; i++) {
+//            for (int j = 0; j < 16; j++) {
+//                //fillPixel(redRead,greenRead,blueRead,i,j);
+//                fillPixel(redRead,greenRead,blueRead,i,j);
+//            }
+//        }
+//        sendCommand(0xAF);
     }
 }
