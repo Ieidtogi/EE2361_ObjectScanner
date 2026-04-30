@@ -76,27 +76,31 @@ int main(void) {
     int testRed = 63;
     int testGreen = 0;
     int testBlue = 0;
-    int temp = 0;
+    short int temp = 0;
     
     while(1) {
         sendCommand(turnon);
 
 //        if(isButtonPressed) {
 //            // Scan -> Display
-          short int clearRead = Color_Read(clearReg); // reads clear data
-          Delayms(5);
-          short int redRead = Color_Read(redReg); // reads red data
-          Delayms(5);
-          short int greenRead = Color_Read(blueReg); // reads green data
-          Delayms(5);
-          short int blueRead = Color_Read(greenReg); // reads blue data
-          Delayms(25);
+//          short int clearRead = Color_Read(clearReg); // reads clear data
+//          Delayms(5);
+//          short int redRead = Color_Read(redReg); // reads red data
+//          Delayms(5);
+//          short int greenRead = Color_Read(blueReg); // reads green data
+//          Delayms(5);
+//          short int blueRead = Color_Read(greenReg); // reads blue data
+//          Delayms(25);
 //        } 
 //        else {  
 //
 //        }
-          
-//        fillPixel(redRead,greenRead,blueRead,0,0);
+        
+//        temp &= 0b111111;
+//        
+//        fillPixel(31,31,32,0,0);
+//        
+//        temp++;
 
 //        for (int i = 0; i < 8;i++) {
 //            for (int j = 0; j < 8; j++) {
@@ -117,6 +121,14 @@ int main(void) {
 //            }
 //        }
           
+//        sendCommand(turnon);
+//        for (int i = 0; i < 8;i++) {
+//            for (int j = 0; j < 8; j++) {
+//                int t = 4*(i + j);
+//                fillPixel(t,t,t,i,j);
+//            }
+//        }
+          
         sendCommand(turnon);
         
         for(int i = 0; i < 16000;i++);
@@ -129,7 +141,7 @@ int main(void) {
         
         for(int i = 0; i < 16000;i++);
         
-        for(int i = 0; i < 200; i++) {
+        for(int i = 0; i < 100; i++) {
             for(int j = 0; j < 32000; j++) {
                 asm("NOP");
             }

@@ -153,7 +153,7 @@ void fillPixel(short int red, short int green, short int blue, int x, int y) {
 //    sendData(A0_DATA); // Horizontal Address increment | Column 0 is 0 | Color Sequence RGB | Scan from COM[0 to n-1] | 16 bit format
     setPos(x*16,(y*16+y_offset)%128,x*16+15,(y*16+15+y_offset)%128);
     
-    for(int i = 0; i < 16*16; i++) {
+    for(int i = 0; i < 256; i++) {
         sendColor(red,green,blue);
     }
 }
@@ -165,20 +165,20 @@ void sendColor(short int red, short int green, short int blue) {
 //    int medium_red = (red & 0b001100) >> 2;
 //    int low_red = red & 0b000001;
     
-    int trueRed = red & 0b111110;
+    short int trueRed = red >> 1;
     
 //    int high_green = green >> 4;
 //    int medium_green = (green & 0b001100) >> 2;
 //    int low_green = green & 0b000001;
     
-    int high_green = green >>3;
-    int low_green = green & 0b000111;
+    short int high_green = green >> 3;
+    short int low_green = green & 0b000111;
     
 //    int high_blue = blue >> 3;
 ////    int medium_blue = (blue & 0b001100) >> 2;
 //    int low_blue = blue & 0b000111;
     
-    int trueBlue = blue & 0b111110;
+    short int trueBlue = blue >> 1;
     
     sendCommand(write);
 //    sendData((high_blue<<6)+(medium_blue<<4)+(low_blue<<2)+high_green);
@@ -190,17 +190,17 @@ void sendColor(short int red, short int green, short int blue) {
 //    sendData(0x00 | ((high_green << 0)  |   (medium_green << 2) |   (low_green << 4)    |   (high_red << 5))); // LATEST ATTEMPT
 //    sendData(0x00 | ((low_red << 0)    |   (high_red << 3)     |   (medium_red << 5)   |   (low_red << 7))); // LATEST attempt
 //    sendData(0x00 | ((high_blue << 0)+(medium_blue << 2)+(low_blue << 4)));
-    sendData(0x00 | ((trueRed<<3)) | (high_green)); 
-    sendData(0x00 | ((low_green<<5) | (trueBlue))); 
+    sendData(0x00 | ((trueRed<<3)) | (high_green));
+    sendData(0x00 | ((low_green<<5) | (trueBlue)));
 }
 
 void fillScreen(short int red, short int green, short int blue, float distances[8][8]) {
     for (int i = 0; i < 8; i++) {
         for(int j = 0; j < 8; j++) {
             float temp = distances[i][j];
-            int redr = (int)(red * (1.0f - temp));
-            int greenr = (int)(green * (1.0f - temp));
-            int bluer = (int)(blue * (1.0f - temp));
+            short int redr = (int)(red * (1.0f - temp));
+            short int greenr = (int)(green * (1.0f - temp));
+            short int bluer = (int)(blue * (1.0f - temp));
             fillPixel(redr, greenr, bluer, i, j);
         }
     }
