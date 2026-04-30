@@ -12,6 +12,7 @@
 
 #define write 0x5C
 #define y_offset 6*16
+#define A0_DATA 0b01110111
 
 //volatile unsigned short int sample = DACBITS;
 
@@ -41,6 +42,7 @@ void spi_init(void)
     TRISBbits.TRISB4 = 0; // SCK
     TRISBbits.TRISB5 = 0; // SDO
     TRISAbits.TRISA3 = 0; // Data or Command
+    
     _LATA4 = 1;
     TRISAbits.TRISA4 = 1; // Reset
     _CN0PUE = 1;
@@ -59,9 +61,12 @@ void spi_init(void)
     SPI1CON1 = 0;
     SPI1CON1bits.MSTEN = 1;  // master mode
     SPI1CON1bits.MODE16 = 0; // 8 bits
-    SPI1CON1bits.CKE = 1;
-    SPI1CON1bits.CKP = 0;
-    SPI1CON1bits.SPRE = 0b0; // secondary prescaler = 8 
+    
+    SPI1CON1bits.CKE = 1;               // Kaibin: Changed this to 0 acc to datasheet
+    SPI1CON1bits.CKP = 0;               // Kaibin: Changed this to 1 acc to datasheet
+    SPI1CON1bits.SMP = 1;               // Added new line
+    
+    SPI1CON1bits.SPRE = 0b01; // secondary prescaler = 8 
     SPI1CON1bits.PPRE = 0b01;  // primary prescaler = 64;
     // SPI1CON1bits.PPRE = 0b01;  // primary prescaler = 16;
     SPI1CON2 = 0;
@@ -80,20 +85,22 @@ void spi_init(void)
     _SPI1IF = 0;
 //    _SPI1IE = 1;
 
-    // Reset the OLED
-    _TRISA4 = 1;
-    for (int i = 0; i<100;i++);
-    _TRISA4 = 0;
+//      Reset the OLED
+//    _TRISA4 = 1;
+//    for (int i = 0; i<100;i++);
+//    _TRISA4 = 0;
     
-    for(int i = 0; i<170; i++){
-        for(int j =0; j<170;j++){
-            for(int k = 0; k<171;k++){
-            }
-        }
-    }
+//    for(int i = 0; i<170; i++){
+//        for(int j =0; j<170;j++){
+//            for(int k = 0; k<171;k++){
+//            }
+//        }
+//    }
     
     // turn on the OLED
     int temp = SPI1BUF;
+    sendCommand(0xA0);
+    sendData(A0_DATA); // Horizontal Address increment | Column 0 is 0 | Color Sequence RGB | Scan from COM[0 to n-1] | 16 bit format
     sendCommand(0xFD); // Command lock or unlock command
     sendCommand(0x12); // unlock command
     
@@ -115,8 +122,12 @@ void sendCommand(short int cmd) {
     short int temp;
     _SPIROV = 0;
     _LATA3 = 0;
+    
+    while (SPI1STATbits.SPITBF);
+    
     SPI1BUF = cmd;
     
+    while (!SPI1STATbits.SPIRBF);
     while (!_SPI1IF);
     temp = SPI1BUF;
     _SPI1IF = 0;
@@ -126,15 +137,20 @@ void sendData(short int data) {
     short int temp;
     _SPIROV = 0;
     _LATA3 = 1;
+    
+    while (SPI1STATbits.SPITBF);
+    
     SPI1BUF = data;
     
+    while (!SPI1STATbits.SPIRBF);
     while (!_SPI1IF);
     temp = SPI1BUF;
     _SPI1IF = 0;
 }
 
 void fillPixel(short int red, short int green, short int blue, int x, int y) {
-    
+//    sendCommand(0xA0);
+//    sendData(A0_DATA); // Horizontal Address increment | Column 0 is 0 | Color Sequence RGB | Scan from COM[0 to n-1] | 16 bit format
     setPos(x*16,(y*16+y_offset)%128,x*16+15,(y*16+15+y_offset)%128);
     
     for(int i = 0; i < 16*16; i++) {
@@ -145,29 +161,47 @@ void fillPixel(short int red, short int green, short int blue, int x, int y) {
 // Sends 4 pixels of the given color
 void sendColor(short int red, short int green, short int blue) {
     
-    int high_red = red >> 4;
-    int medium_red = (red & 0b001100) >> 2;
-    int low_red = red & 0b000011;
+//    int high_red = red >> 4;
+//    int medium_red = (red & 0b001100) >> 2;
+//    int low_red = red & 0b000001;
     
-    int high_green = green >> 4;
-    int medium_green = (green & 0b001100) >> 2;
-    int low_green = green & 0b000011;
+    int trueRed = red & 0b111110;
     
-    int high_blue = blue >> 4;
-    int medium_blue = (blue & 0b001100) >> 2;
-    int low_blue = blue & 0b000011;
+//    int high_green = green >> 4;
+//    int medium_green = (green & 0b001100) >> 2;
+//    int low_green = green & 0b000001;
+    
+    int high_green = green >>3;
+    int low_green = green & 0b000111;
+    
+//    int high_blue = blue >> 3;
+////    int medium_blue = (blue & 0b001100) >> 2;
+//    int low_blue = blue & 0b000111;
+    
+    int trueBlue = blue & 0b111110;
     
     sendCommand(write);
-    sendData((high_blue<<6)+(medium_blue<<4)+(low_blue<<2)+high_green);
-    sendData((medium_green<<6)+(low_green<<4)+(high_red<<2)+medium_red);
-    sendData((low_red<<6)+0b111);
-
+//    sendData((high_blue<<6)+(medium_blue<<4)+(low_blue<<2)+high_green);
+//    sendData((medium_green<<6)+(low_green<<4)+(high_red<<2)+medium_red);
+//    sendData((low_red<<6));
+//    sendData(high_blue);
+//    sendData((medium_blue<<6) | (low_blue<<4) | (high_green<<2) | (medium_green));
+//    sendData((low_green<<6) | (high_red << 4) | (medium_red << 2) | (low_red));
+//    sendData(0x00 | ((high_green << 0)  |   (medium_green << 2) |   (low_green << 4)    |   (high_red << 5))); // LATEST ATTEMPT
+//    sendData(0x00 | ((low_red << 0)    |   (high_red << 3)     |   (medium_red << 5)   |   (low_red << 7))); // LATEST attempt
+//    sendData(0x00 | ((high_blue << 0)+(medium_blue << 2)+(low_blue << 4)));
+    sendData(0x00 | ((trueRed<<3)) | (high_green)); 
+    sendData(0x00 | ((low_green<<5) | (trueBlue))); 
 }
 
-void fillScreen(short int red, short int green, short int blue, float** distances) {
+void fillScreen(short int red, short int green, short int blue, float distances[8][8]) {
     for (int i = 0; i < 8; i++) {
         for(int j = 0; j < 8; j++) {
-            fillPixel((int)(red*distances[i][j]),(int)(green*distances[i][j]),(int)(blue*distances[i][j]),i,j);
+            float temp = distances[i][j];
+            int redr = (int)(red * (1.0f - temp));
+            int greenr = (int)(green * (1.0f - temp));
+            int bluer = (int)(blue * (1.0f - temp));
+            fillPixel(redr, greenr, bluer, i, j);
         }
     }
 }

@@ -11,6 +11,7 @@
 #include "I2CLib.h"
 #include "Button.h"
 #include "oled_lib.h"
+#include "color_sensor_lib.h"
 
 // CW1: FLASH CONFIGURATION WORD 1 (see PIC24 Family Reference Manual 24.1)
 #pragma config ICS = PGx1          // Comm Channel Select (Emulator EMUC1/EMUD1 pins are shared with PGC1/PGD1)
@@ -26,67 +27,124 @@
                                        // Fail-Safe Clock Monitor is enabled)
 #pragma config FNOSC = FRCPLL      // Oscillator Select (Fast RC Oscillator with PLL module (FRCPLL))
 
+#define turnon 0xAF
+
 buffer_t* myBuf;
+
+unsigned long int count = 0;
 
 void setup(void) {
     //setup stuff
+    CLKDIVbits.RCDIV = 0;  //Set RCDIV=1:1 (default 2:1) 32MHz or FCY/2=16M
+    AD1PCFG = 0x9fff;            //sets all pins to digital I/O
+    
     myBuf = buffer_init();
     i2c1_init(myBuf);
+    
+    Color_Init();
+    initButton();
 }
 
 int main(void) {
     setup();
-//    Color_Init();
-//    initButton();
+    
+    _TRISA4 = 0;
+    
+    LATAbits.LATA4 = 0;
+    
+    for(int i = 0; i < 10; i++) {
+        for (unsigned int i = 0; i < 65535; i++);
+    }
+    
+    LATAbits.LATA4 = 1;
+    
+    LATAbits.LATA4 = 0;
+    
+    for(int i = 0; i < 175; i++) {
+        for (unsigned int i = 0; i < 65535; i++);
+    }
+    
+    LATAbits.LATA4 = 1;
+    
     spi_init();
     
     int red=0;
     int green=0;
     int blue=0;
     
-    sendCommand(0xAF);
     sendCommand(0xA6);
-
+    int testRed = 63;
+    int testGreen = 0;
+    int testBlue = 0;
+    int temp = 0;
+    
     while(1) {
-        
+        sendCommand(turnon);
+
 //        if(isButtonPressed) {
 //            // Scan -> Display
-//          short int clearRead = Color_Read(clearReg); // reads clear data
-//          Delayms(5);
-//          short int redRead = Color_Read(redReg); // reads red data
-//          Delayms(5);
-//          short int greenRead = Color_Read(blueReg); // reads green data
-//          Delayms(5);
-//          short int blueRead = Color_Read(greenReg); // reads blue data
-//          Delayms(25);
+          short int clearRead = Color_Read(clearReg); // reads clear data
+          Delayms(5);
+          short int redRead = Color_Read(redReg); // reads red data
+          Delayms(5);
+          short int greenRead = Color_Read(blueReg); // reads green data
+          Delayms(5);
+          short int blueRead = Color_Read(greenReg); // reads blue data
+          Delayms(25);
 //        } 
 //        else {  
 //
 //        }
-        
-        for (int i = 0; i < 8;i++) {
-            for (int j = 0; j < 8; j++) {
-                fillPixel(i+j,i,j,i,j);
-            }
-        }  
+          
+//        fillPixel(redRead,greenRead,blueRead,0,0);
 
+//        for (int i = 0; i < 8;i++) {
+//            for (int j = 0; j < 8; j++) {
+//                fillPixel(63,0,0,i,j);
+//            }
+//        }
+//
+//        sendCommand(turnon);
+//        for (int i = 0; i < 8;i++) {
+//            for (int j = 0; j < 8; j++) {
+//                fillPixel(0,63,0,i,j);
+//            }
+//        }
+//        sendCommand(turnon);
+//        for (int i = 0; i < 8;i++) {
+//            for (int j = 0; j < 8; j++) {
+//                fillPixel(0,0,63,i,j);
+//            }
+//        }
+          
+        sendCommand(turnon);
+        
         for(int i = 0; i < 16000;i++);
         
         sendCommand(0xA5);
-
+        
         for(int i = 0; i < 16000;i++);
 
         sendCommand(0xA6);
-
+        
         for(int i = 0; i < 16000;i++);
         
-        for(int i = 0; i < 1000; i++) {
+        for(int i = 0; i < 200; i++) {
             for(int j = 0; j < 32000; j++) {
                 asm("NOP");
             }
         }
         
         data_conversion(myBuf);
+//        
+//        count++;
+//        
+//        testBlue = testGreen;
+//        testGreen = testRed;
+//        testRed = temp;
+//        temp = testBlue;
+//        fillScreen(redRead, greenRead, blueRead, nor_results);
+        fillScreen(63, 63, 63, nor_results);
 
 //        if(isButtonPressed) {
 //            //Scan -> Display
