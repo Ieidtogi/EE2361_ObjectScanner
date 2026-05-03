@@ -11,7 +11,7 @@
 uint16_t results[8][8];
 float nor_results[8][8];
 
-uint16_t max = 0;
+uint16_t max;
 uint16_t min;
 
 uint8_t flag = 0;
@@ -35,6 +35,9 @@ void data_conversion(buffer_t *f) {
 void data_normalization(void) {
     _SI2C1IE = 0;   // We don't want this to be interrupted by new data input.
     
+    max = 0;
+    min = 0;
+    
     for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
             if(!flag) {
@@ -56,11 +59,11 @@ void data_normalization(void) {
         return;
     }
     
-    float coeff = 1.0f / (max - min);
+    float coeff = 1.0f / ((float)(max - min));
     
     for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
-            nor_results[i][j] = (float)((results[i][j] - min) * coeff);
+            nor_results[i][j] = (((float)(results[i][j] - min)) * coeff);
         }
     }
     
