@@ -76,27 +76,7 @@ void spi_init(void)
                                 // That means the SPI xfer is complete.
     SPI1STATbits.SPIEN = 1;
     
-
-//    IFS0bits.T2IF = 0;
-//    TMR2 = 0;
-//
-//    IPC1bits.T2IP = 5;
-//    IEC0bits.T2IE = 1;
     _SPI1IF = 0;
-//    _SPI1IE = 1;
-
-//      Reset the OLED
-//    _TRISA4 = 1;
-//    for (int i = 0; i<100;i++);
-//    _TRISA4 = 0;
-    
-//    for(int i = 0; i<170; i++){
-//        for(int j =0; j<170;j++){
-//            for(int k = 0; k<171;k++){
-//            }
-//        }
-//    }
-    
     // turn on the OLED
     int temp = SPI1BUF;
     sendCommand(0xA0);
@@ -110,6 +90,7 @@ void spi_init(void)
 }
 
 void setPos(short int xStart, short int yStart, short int xEnd, short int yEnd) {
+    // Allocate the square you would like to color
     sendCommand(0x15); // set column address command
     sendData(xStart); // send the start column address
     sendData(xEnd); // send the end column address
@@ -121,80 +102,56 @@ void setPos(short int xStart, short int yStart, short int xEnd, short int yEnd) 
 void sendCommand(short int cmd) {
     short int temp;
     _SPIROV = 0;
-    _LATA3 = 0;
+    _LATA3 = 0; // This tells the OLED that the data coming in is a command
     
-    while (SPI1STATbits.SPITBF);
+    while (SPI1STATbits.SPITBF); // make sure the buffer will not overflow
     
-    SPI1BUF = cmd;
+    SPI1BUF = cmd; // send the command
     
     while (!SPI1STATbits.SPIRBF);
-    while (!_SPI1IF);
-    temp = SPI1BUF;
+    while (!_SPI1IF); // wait for the command to be sent
+    temp = SPI1BUF; // clear the buffer
     _SPI1IF = 0;
 }
 
 void sendData(short int data) { 
     short int temp;
     _SPIROV = 0;
-    _LATA3 = 1;
+    _LATA3 = 1; // this tells the OLED that the data coming in is just data
     
-    while (SPI1STATbits.SPITBF);
+    while (SPI1STATbits.SPITBF); // make sure the buffer will not overflow
     
-    SPI1BUF = data;
+    SPI1BUF = data; // send the data
     
     while (!SPI1STATbits.SPIRBF);
-    while (!_SPI1IF);
-    temp = SPI1BUF;
+    while (!_SPI1IF); // wait for the data to be sent
+    temp = SPI1BUF; // clear the buffer
     _SPI1IF = 0;
 }
 
 void fillPixel(short int red, short int green, short int blue, int x, int y) {
-//    sendCommand(0xA0);
-//    sendData(A0_DATA); // Horizontal Address increment | Column 0 is 0 | Color Sequence RGB | Scan from COM[0 to n-1] | 16 bit format
-    setPos(x*16,(y*16+y_offset)%128,x*16+15,(y*16+15+y_offset)%128);
+    // splits the screen into an 8x8 grid of pixels, and fills a single one with the given color
+    setPos(x*16,(y*16+y_offset)%128,x*16+15,(y*16+15+y_offset)%128); // an 8x8 grid on the OLED would mean 16x16 pixel chunks
     
     for(int i = 0; i < 256; i++) {
         sendColor(red,green,blue);
-    }
+    } // fills the pixel with the given color
 }
 
-// Sends 4 pixels of the given color
+
 void sendColor(short int red, short int green, short int blue) {
-    
-//    int high_red = red >> 4;
-//    int medium_red = (red & 0b001100) >> 2;
-//    int low_red = red & 0b000001;
-    
+    // Gives a single pixel on the screen a color.
     short int trueRed = red >> 1;
-    
-//    int high_green = green >> 4;
-//    int medium_green = (green & 0b001100) >> 2;
-//    int low_green = green & 0b000001;
-    
     short int high_green = green >> 3;
     short int low_green = green & 0b000111;
-    
-//    int high_blue = blue >> 3;
-////    int medium_blue = (blue & 0b001100) >> 2;
-//    int low_blue = blue & 0b000111;
-    
-    short int trueBlue = blue >> 1;
-    
+    short int trueBlue = blue >> 1; // reformat the color values for 5 6 5 16bit R G B format
     sendCommand(write);
-//    sendData((high_blue<<6)+(medium_blue<<4)+(low_blue<<2)+high_green);
-//    sendData((medium_green<<6)+(low_green<<4)+(high_red<<2)+medium_red);
-//    sendData((low_red<<6));
-//    sendData(high_blue);
-//    sendData((medium_blue<<6) | (low_blue<<4) | (high_green<<2) | (medium_green));
-//    sendData((low_green<<6) | (high_red << 4) | (medium_red << 2) | (low_red));
-//    sendData(0x00 | ((high_green << 0)  |   (medium_green << 2) |   (low_green << 4)    |   (high_red << 5))); // LATEST ATTEMPT
-//    sendData(0x00 | ((low_red << 0)    |   (high_red << 3)     |   (medium_red << 5)   |   (low_red << 7))); // LATEST attempt
-//    sendData(0x00 | ((high_blue << 0)+(medium_blue << 2)+(low_blue << 4)));
     sendData(0x00 | ((trueRed<<3)) | (high_green));
     sendData(0x00 | ((low_green<<5) | (trueBlue)));
 }
 
 void fillScreen(short int red, short int green, short int blue, float distances[8][8]) {
+    // Takes a 2D array of distances and adjusts the brightness of the color according to their position. Giving the illusion of a 3D image
     for (int i = 0; i < 8; i++) {
         for(int j = 0; j < 8; j++) {
             float temp = distances[i][j];
