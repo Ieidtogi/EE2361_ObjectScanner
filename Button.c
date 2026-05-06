@@ -15,7 +15,7 @@ void __attribute__((interrupt, auto_psv)) _T2Interrupt(void) {
     _T2IF = 0;
 }
 
-void __attribute__((__interrupt__, __auto_psv__)) _IC1Interrupt(void) { // Handles hardware-timed button events and software debouncing
+void __attribute__((__interrupt__, __auto_psv__)) _IC1Interrupt(void) { // Handles hardware-timed button events
     _IC1IF = 0;
     int temp = IC1BUF; // Clear buffer
     
