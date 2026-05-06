@@ -34,7 +34,6 @@ void Color_Init(void) {
     Delayms(5);
     Color_Cmd(0x81, 0xFF); //set 2.4 millisecond RGBC time
     Delayms(5); 
-    //Color_Cmd(0x80, 0x12); //RBGC enable PON = 0
     Color_Cmd(0x80, 0x03); //RBGC enable PON = 1
 }
 
@@ -111,8 +110,3 @@ void Delayms(int time) {
         }
     }
 }
-
-//long int GetRGB(void) { 
-//    long int colorVal = (Color_Read(0x16)>>6) & 0b111111;
-////    colorVal +=
-//}

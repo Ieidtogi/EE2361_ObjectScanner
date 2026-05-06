@@ -27,7 +27,6 @@ extern "C" {
     void Color_Cmd(char command, char data);
     int Color_Read(char regAddress);
     void Delayms(int time);
-    long int GetRGB(void);
 
 #ifdef	__cplusplus
 }
