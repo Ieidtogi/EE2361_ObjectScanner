@@ -79,7 +79,9 @@ int main(void) {
     short int temp = 0;
     
     while(1) {
-        sendCommand(turnon);
+        sendCommand(turnon);    // Turn on the OLED display repeatedly again just in case.
+
+        // TODO: Button Logic Implementation
 
 //        if(isButtonPressed) {
 //            // Scan -> Display
@@ -91,10 +93,11 @@ int main(void) {
 //          Delayms(5);
 //          short int blueRead = Color_Read(greenReg); // reads blue data
 //          Delayms(25);
-//        } 
-//        else {  
+//        } else {  
 //
 //        }
+
+        // Debug Test Logic
         
 //        temp &= 0b111111;
 //        
@@ -102,9 +105,9 @@ int main(void) {
 //        
 //        temp++;
 
-////        for (int i = 0; i < 8;i++) {
-////            for (int j = 0; j < 8; j++) {
-////                fillPixel(63,0,0,i,j);
+//        for (int i = 0; i < 8;i++) {
+//            for (int j = 0; j < 8; j++) {
+//                fillPixel(63,0,0,i,j);
 //            }
 //        }
 //
@@ -118,8 +121,8 @@ int main(void) {
 //        for (int i = 0; i < 8;i++) {
 //            for (int j = 0; j < 8; j++) {
 //                fillPixel(0,0,63,i,j);
-////            }
-////        }
+//            }
+//        }
         
 //        sendCommand(turnon);
 //        for (int i = 0; i < 8;i++) {
@@ -156,11 +159,12 @@ int main(void) {
 //        testRed = temp;
 //        temp = testBlue;
 //        fillScreen(redRead, greenRead, blueRead, nor_results);
+
         fillScreen(63, 63, 63, nor_results);
         
         count++;
         
-        fillScreen(63,63,63, nor_results);
+        fillScreen(63, 63, 63, nor_results);
 
 //        if(isButtonPressed) {
 //            //Scan -> Display

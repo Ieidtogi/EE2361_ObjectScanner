@@ -36,13 +36,36 @@ extern "C" {
 	extern buffer_t* rx_buffer;
 
 	/* I2C Function Prototype */
+
+	/**
+	 * I2C Initialization Function: Initializes the I2C module in Master mode and sets up the receive buffer for Slave mode.
+	 * It configures the I2C baud rate for both 100 kHz and 400 kHz operation and enables the necessary interrupts.
+	 */
+
 	void i2c1_init(buffer_t *rxBuf);
+
+	/* I2C Module Initialization Functions */
 
 	void i2c1_master_init(void);
 	void i2c1_slave_init(uint8_t address);
 
+	/**
+	 * I2C Master Write Stream Function: Initiates a multi-byte write operation to a specified I2C slave device and register.
+	 * It takes the slave address, register address, pointer to the data buffer, and the length of the data to be written.
+	 * The function manages the I2C state machine to ensure proper communication with the slave device.
+	 */
+
 	void i2c1_master_writ_stream(uint8_t addr, uint16_t reg, uint8_t *data, uint8_t length);
+
+	/**
+	 * I2C Master Read Stream Function: Initiates a multi-byte read operation from a specified I2C slave device and register.
+	 * It takes the slave address, register address, pointer to the destination buffer, and the length of the data to be read.
+	 * The function manages the I2C state machine to ensure proper communication with the slave device.
+	 */
+
 	void i2c1_master_read_stream(uint8_t addr, uint16_t reg, uint8_t *dest, uint8_t length);
+
+	/* I2C Interrupt Service Routines */
 
 	void __attribute__((interrupt, no_auto_psv)) _MI2C1Interrupt(void);
 	void __attribute__((interrupt, auto_psv)) _SI2C1Interrupt(void);

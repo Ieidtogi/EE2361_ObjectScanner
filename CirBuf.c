@@ -123,10 +123,10 @@ int buffer_pop(buffer_t *f) {
 
 int buffer_is_empty(buffer_t *f) {
     if (f->head == f->tail) {
-        return 0;   // Buffer Empty
+        return 1;   // Buffer Empty
     }
     
-    return 1;       // Buffer Not Empty 
+    return 0;       // Buffer Not Empty 
 }
 
 double buffer_average(buffer_t *f) {
