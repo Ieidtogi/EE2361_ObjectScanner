@@ -3,6 +3,7 @@
 An embedded 3D object scanner with an integrated OLED visualizer designed to capture and display depth maps and color profiles in real-time.
 
 ![Full Stack:](images/Scanner.png)
+**Demo Video:** https://youtube.com/shorts/giUS9eJ66J0?feature=share
 
 ---
 
@@ -14,8 +15,6 @@ An embedded 3D object scanner with an integrated OLED visualizer designed to cap
 * **Ergonomic Handheld Form Factor:** Built using a lightweight 100g PLA 3D-printed chassis featuring a comfortable handheld grip and an integrated physical push-button trigger.
 
   ![CAD Render:](images/RotatingScannerRender.gif)
-
-* **Demo Video:** https://youtube.com/shorts/giUS9eJ66J0?feature=share
 
 * **Modular Library Design:** Clean codebase splitting functionalities over I2C and SPI protocols with customizable global parameters.
 
