@@ -15,6 +15,8 @@ An embedded 3D object scanner with an integrated OLED visualizer designed to cap
 
   ![CAD Render:](images/RotatingScannerRender.gif)
 
+* **Demo Video:** https://youtube.com/shorts/giUS9eJ66J0?feature=share
+
 * **Modular Library Design:** Clean codebase splitting functionalities over I2C and SPI protocols with customizable global parameters.
 
 ---
