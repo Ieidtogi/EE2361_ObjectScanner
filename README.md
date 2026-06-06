@@ -1,6 +1,7 @@
 # Object Feature Scanner / Analyzer
 
 An embedded 3D object scanner with an integrated OLED visualizer designed to capture and display depth maps and color profiles in real-time.
+![Full Stack:](images/Scanner.png)
 
 ---
 
@@ -10,6 +11,7 @@ An embedded 3D object scanner with an integrated OLED visualizer designed to cap
 * **Long-Range Sensing:** Accurate object telemetry capture up to a range of 4 meters.
 * **Onboard Visualizer:** Equipped with a 44.5x37mm square OLED display angled toward the user, featuring precise 1:1 pixel-to-datapoint mapping on a 16x16px grid and a 3-second refresh rate.
 * **Ergonomic Handheld Form Factor:** Built using a lightweight 100g PLA 3D-printed chassis featuring a comfortable handheld grip and an integrated physical push-button trigger.
+  ![CAD Render:](images/RotatingScannerRender.gif)
 * **Modular Library Design:** Clean codebase splitting functionalities over I2C and SPI protocols with customizable global parameters.
 
 ---
