@@ -3,6 +3,7 @@
 An embedded 3D object scanner with an integrated OLED visualizer designed to capture and display depth maps and color profiles in real-time.
 
 ![Full Stack:](images/Scanner.png)
+
 **Demo Video:** https://youtube.com/shorts/giUS9eJ66J0?feature=share
 
 ---
